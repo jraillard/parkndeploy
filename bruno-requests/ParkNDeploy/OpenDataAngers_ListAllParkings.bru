@@ -1,0 +1,15 @@
+meta {
+  name: OpenDataAngers_ListAllParkings
+  type: http
+  seq: 2
+}
+
+get {
+  url: https://data.angers.fr/api/explore/v2.1/catalog/datasets/parking-angers/records?limit=18
+  body: none
+  auth: none
+}
+
+params:query {
+  limit: 18
+}
