@@ -1,3 +1,4 @@
+using ParkNDeploy.Api.Endpoints;
 using ParkNDeploy.Api.Services;
 
 // Create the dependecy injection container
@@ -13,28 +14,43 @@ builder.Services.AddHttpClient<OpenDataAngersService>((serviceProvider, client) 
     client.BaseAddress = new Uri("https://data.angers.fr");
 });
 
+// In case of development environment Add CORS policy for our React App
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy(name: "LocalPolicy",
+            policy =>
+            {
+                policy.WithOrigins("http://localhost:5175");
+            });
+    });
+}
+
 // Build the dependency injection container and create the application
 var app = builder.Build();
 
-// In case of development environment, add Swagger middleware and UI
+// In case of development environment
 if (app.Environment.IsDevelopment())
 {
+    // Add Swagger middleware
     app.UseSwagger();
+    // Add Swagger UI middleware
     app.UseSwaggerUI();
+    // Add CORS middleware
+    app.UseCors("LocalPolicy");
 }
 
 // Add HTTPS redirection
 app.UseHttpsRedirection();
 
 // Add the endpoint to get Angers parkings using minimal API
-app.MapGet("/parkings-angers", async (OpenDataAngersService openDataAngersService) =>
-{
-    var parkings = await openDataAngersService.GetParkingsAsync();
-
-    return parkings;
-})
-.WithName("GetAngersParkings")
-.WithOpenApi();
+app.MapParkingsAngersEndpoints();
 
 // Run the WebApplication
 app.Run();
+
+internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+{
+    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+};
