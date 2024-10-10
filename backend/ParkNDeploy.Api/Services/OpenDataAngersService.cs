@@ -26,7 +26,7 @@ namespace ParkNDeploy.Api.Services
             if (response is null)
                 return [];
 
-            return response.Parkings;
+            return [.. response.Parkings.OrderByDescending(x => x.AvailablePlaces)];
         }
     }
 
