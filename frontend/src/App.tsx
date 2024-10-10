@@ -1,5 +1,5 @@
 import "./App.css";
-import { Parking } from "./api/services/ParkingsAngersService/contracts";
+import { Parking, ParkingStatus } from "./api/services/ParkingsAngersService/contracts";
 import { useQuery } from "@tanstack/react-query";
 import ParkingsAngersEndpointsQueryMethods, {
   PARKINGS_QUERY_KEY,
@@ -18,12 +18,21 @@ function App() {
   ) : (
     data &&
     data.parkings.map((parking: Parking, idx: number) => (
-      <Card key={idx}>
+      <Card key={idx} className={
+        parking.status == ParkingStatus.GREEN
+          ? "bg-green-600"
+          : parking.status == ParkingStatus.RED
+          ? "bg-red-600"
+          : parking.status == ParkingStatus.ORANGE
+          ? "bg-orange-600"
+          : ""}>
         <CardHeader>
-          <CardTitle>{parking.nom}</CardTitle>
+          <CardTitle>{parking.name}</CardTitle>
         </CardHeader>
         <CardContent>
-          <p>Nombre de places disponibles : {parking.disponible}</p>
+          <p>
+            Nom de place de parking disponible : {parking.availablePlaces}
+          </p>
         </CardContent>
       </Card>
     ))

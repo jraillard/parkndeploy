@@ -14,6 +14,7 @@ builder.Services.AddHttpClient<OpenDataAngersService>((serviceProvider, client) 
     client.BaseAddress = new Uri("https://data.angers.fr");
 });
 
+
 // In case of development environment Add CORS policy for our React App
 if (builder.Environment.IsDevelopment())
 {

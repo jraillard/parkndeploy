@@ -21,20 +21,46 @@ namespace ParkNDeploy.Api.Services
         public async Task<Parking[]> GetParkingsAsync()
         {
             var response = await _client
-                .GetFromJsonAsync<ParkingAngersResult?>("/api/explore/v2.1/catalog/datasets/parking-angers/records?limit=20");
+                .GetFromJsonAsync<ParkingAngersOpenDataApiResult?>("/api/explore/v2.1/catalog/datasets/parking-angers/records?limit=20");
 
             if (response is null)
                 return [];
 
-            return [.. response.Parkings.OrderByDescending(x => x.AvailablePlaces)];
+            return [
+                .. response.Parkings
+                .OrderByDescending(x => x.AvailablePlaces)
+                .Select(x => new Parking(
+                    x.Name,
+                    x.AvailablePlaces,
+                    x.AvailablePlaces switch
+                    {
+                        // Basic color coding for parking status
+                        // Better way would be to combine with another datasets to get the parking capacity
+                        < 5 => ParkingStatus.Red,
+                        < 20 => ParkingStatus.Orange,
+                        _ => ParkingStatus.Green
+                    }
+                ))];
         }
     }
 
-    public record ParkingAngersResult(
+    public record ParkingAngersOpenDataApiResult(
         [property: JsonPropertyName("total_count")] int TotalCount,
-        [property: JsonPropertyName("results")] Parking[] Parkings);
+        [property: JsonPropertyName("results")] ParkingOpenDataApiResult[] Parkings);
 
-    public record Parking(
+    public record ParkingOpenDataApiResult(
         [property: JsonPropertyName("nom")] string Name,
         [property: JsonPropertyName("disponible")] int AvailablePlaces);
+
+    public record Parking(
+        string Name,
+        int AvailablePlaces,
+        ParkingStatus status);
+
+    public enum ParkingStatus
+    {
+        Green = 0,
+        Orange = 1,
+        Red = 2,
+    }
 }

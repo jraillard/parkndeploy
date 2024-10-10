@@ -1,4 +1,11 @@
 export type Parking = {
-    nom: string;
-    disponible: number;
+    name: string;
+    availablePlaces: number;
+    status: ParkingStatus;
+}
+
+export enum ParkingStatus {
+    GREEN = 0,
+    ORANGE = 1,
+    RED = 2
 }

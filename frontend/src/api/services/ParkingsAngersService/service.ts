@@ -9,7 +9,6 @@ export default class ParkingsAngersService {
             url: ParkingsAngersEndpoints.getParkings(),
             method: 'GET',
         });
-        setTimeout(() => { }, 3000);
         return response as Parking[];
     };
 };
