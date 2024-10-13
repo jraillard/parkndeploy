@@ -31,13 +31,14 @@ if (builder.Environment.IsDevelopment())
 // Build the dependency injection container and create the application
 var app = builder.Build();
 
+// Add Swagger middleware
+app.UseSwagger();
+// Add Swagger UI middleware
+app.UseSwaggerUI();
+
 // In case of development environment
 if (app.Environment.IsDevelopment())
 {
-    // Add Swagger middleware
-    app.UseSwagger();
-    // Add Swagger UI middleware
-    app.UseSwaggerUI();
     // Add CORS middleware
     app.UseCors("LocalPolicy");
 }

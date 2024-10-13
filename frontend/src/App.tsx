@@ -11,7 +11,7 @@ import { useParkingSearchStore } from "@/stores/parkingSearchStore";
 function App() {
   const { parkingName } = useParkingSearchStore();
 
-  const { data, isPending, isFetched } = useQuery({
+  const { data, isPending, isError } = useQuery({
     queryKey: [PARKINGS_QUERY_KEY, { parkingName }],
     queryFn: () => ParkingsAngersEndpointsQueryMethods.getAllParkings(parkingName),
   });
@@ -19,7 +19,7 @@ function App() {
   console.log(parkingName)
 
   return (
-    <div className="flex flex-col gap-5 items-center w-full">
+    <div className="flex flex-col gap-5 items-center">
       <h1 className="text-2xl font-bold text-center">
         Where can I Park in Angers ? 👀
       </h1>
@@ -29,7 +29,8 @@ function App() {
         }}
       />
       {isPending && <LoadingSpinner className="mr-2 h-4 w-4 animate-spin" />}
-      {isFetched && data && <ParkingList parkings={data.parkings} />}
+      {isError && <span>Something wront with the backend ...</span>}
+      {data && <ParkingList parkings={data.parkings} />}
     </div>
   );
 }
