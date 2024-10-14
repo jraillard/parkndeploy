@@ -121,3 +121,9 @@ In this initiation course we will focus on :
 ### Let's dive-In !
 
 :rocket: Buckle up, folks! It's time to blast off to the [first step](./doc/step1_deploy_backend.md) of our course. Ready, set, deploy!
+
+## Additional Resources (for DevOps enthusiastics)
+
+First of all, I hope this initiation gave you interest into DevOps concepts and that you understand how it could help you in your day-to-day tasks in real-world project.
+
+Now for a treasure trove of additional resources to dive deeper into DevOps concepts, check out the [**to go further section**](doc/to_go_further.md). :eyes:

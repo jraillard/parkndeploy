@@ -12,7 +12,7 @@ In order to create an Azure Students account, follow the next steps :
 
 :four: Connect on your school authentication page (if there's one) and follow the steps
 
-&rarr; you might receive a mail saying that your account has been created or that you should validate it before.
+&rarr; You might receive a mail saying that your account has been created or that you should validate it before.
 
 :five: Therefore you should be able to connect to [Azure Portal](https://portal.azure.com/#home) and have a screen like this : 
 
