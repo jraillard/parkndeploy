@@ -1,4 +1,7 @@
 on:
+  push:
+    branches:
+      - solution
   workflow_dispatch:
 
 permissions:
