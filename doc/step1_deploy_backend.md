@@ -23,4 +23,15 @@ For the resourcegroup specify : rg-uai-{trigram}
 
 for the user assigned managed identity name just remove rg : uai-{trigram} (note : add parkndeploy ?)
 
-note => AZURE_CLIENT_ID & AZURE_SUBSCRIPTION_ID could be find in your UAI ; AZURE_TENANT_ID could be find in Microsft Entra ID Service (look for it in the main azure search bar)
+AZURE_CLIENT_ID & AZURE_SUBSCRIPTION_ID could be find in your UAI ; AZURE_TENANT_ID could be find in Microsft Entra ID Service (look for it in the main azure search bar)
+
+:warning: after creating UAI , need to create the Federated Credential . When we'll connect to Azure in our gh workflow, that's the token that will be fetched and use in every azure command
+![alt text](image.png)
+
+Organization : your github account name
+Repository : your forked repo
+...
+
+-- 
+
+Edit : the federated credential should be specified for each repo & branch so for simplicity => use a basic service principal + secret
