@@ -20,10 +20,10 @@ jobs:
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
     - name: Deploy bicep
-        id: bicep-deploy
-        uses: azure/arm-deploy@v1
-        with:
-          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-          region: ${{ secrets.AZURE_REGION }}
-          template: ./infrastructure/main.bicep
-          parameters: project=parkndeploy location=${{ secrets.AZURE_REGION }}
+      id: bicep-deploy
+      uses: azure/arm-deploy@v1
+      with:
+        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+        region: ${{ secrets.AZURE_REGION }}
+        template: ./infrastructure/main.bicep
+        parameters: project=parkndeploy location=${{ secrets.AZURE_REGION }}
