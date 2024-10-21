@@ -52,3 +52,18 @@ https://gist.github.com/ausfestivus/04e55c7d80229069bf3bc75870630ec8
 
 repo vars : PROJECT_NAME,  AZURE_RESOURCE_IDENTIFIER => to make it unique (your trigram)
 :bulb: in workflow we'll combine them in order to make our resources names uniques => every resources should be unique in azure as it bind strongly bind to service defaultHostName
+
+we create resource group before using bicep cause bicep cannot create it first and then populate it
+=> two possibilities then, create by your own or only use a basic azure cli command
+
+here infra and app deployment are splited cause in production you would rarely do everything in single time and may want to add some validation between each steps.
+That way you'll learn how to create multiple job and interact within them
+
+![default page app service](./assets/app_service_default_page.png)
+
+go the website url shown in github logs and .. what there's a 404 ,! :impress:
+
+quite normal : this is an API, no pages are configured to be displayed.
+ 
+ but ! we have a swagger :D , add `/swagger` to the url and you should see something like : 
+ ![backend swagger](./assets/backend_swagger.png)

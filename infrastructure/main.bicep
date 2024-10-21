@@ -28,4 +28,4 @@ module appService 'modules/appService.bicep' = {
   }
 }
 
-output appServiceName string = appService.outputs.appServiceName
+output appServiceName string = appService.outputs.appServiceName // Export AppServiceName in order to deploy the API later on
