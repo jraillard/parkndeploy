@@ -46,7 +46,7 @@ jobs:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         region: ${{ secrets.AZURE_REGION }}
         template: ./infrastructure/main.bicep
-        parameters: project=${{ vars.PROJECT_NAME }} location=${{ secrets.AZURE_REGION }} identifier=${{ vars.AZURE_RESOURCE_IDENTIFIER }}
+        parameters: project=${{ vars.PROJECT_NAME }} location=${{ secrets.AZURE_REGION }} swaLocation=${{ secrets.AZURE_SWA_REGION }} identifier=${{ vars.AZURE_RESOURCE_IDENTIFIER }}
         resourceGroupName: ${{ env.AZURE_RG_NAME }}
 
   deploy_backend:
@@ -74,8 +74,9 @@ jobs:
       run: dotnet publish -c Release --property:PublishDir=publish # Publish the app to the publish folder of the API project
       working-directory: ./backend # specify where to find the sln file
       
-    - name: Deploy to App Service
+    - name: Deploy backend to App Service
       uses: azure/webapps-deploy@v2
       with: 
         app-name: ${{ needs.deploy_infrastructure.outputs.appServiceName }} # Access to the previous job output to get the appServiceName deployed with bicep
         package: ./backend/ParkNDeploy.Api/publish # Path to the previously published app
+
