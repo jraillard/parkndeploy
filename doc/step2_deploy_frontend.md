@@ -34,3 +34,10 @@ sol 2 chosen (it is more modular, you don't need to first deploy your infra and 
 
 :warning: microsoft doc show this command to get token : https://learn.microsoft.com/en-us/azure/static-web-apps/static-web-apps-cli-deploy#:~:text=Manage%20deployment%20token-,Azure%20CLI,-%3A%20Using%20the%20secrets
 but this give your token (basically a guid) in " " characters, need to ad "-o tsv" to remove those and use it directly
+
+our app is now deployed let see how wonderfull it looks ! 
+
+wait ... what ? 
+![seems there's a pb with backend...](./assets/react_app_no_backend_error.png)
+
+seems we need to step into some troobleshooting :eyeglasses:

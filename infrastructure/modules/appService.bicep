@@ -22,3 +22,4 @@ resource app 'Microsoft.Web/sites@2022-03-01' = {
 }
 
 output appServiceName string = app.name // We'll need the name of the App Service later on
+output appServiceUrl string = app.properties.defaultHostName // We'll need the URL of the App Service later on
