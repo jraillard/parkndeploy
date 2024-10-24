@@ -29,5 +29,18 @@ therefore you need to pass those during build command, not during deploy on swa
 
 Personnal Notes > static web app by default add env files behind swa host this is done by a proxy
 need to : 
-update vite config & axios to by default call /api and redirect to local backend
-for swa we need to make a 
+update vite config & axios to by default call /api and redirect to local backend (which needs to defind a /api base path (avoid url rewrite))
+
+no more ==> 
+-> env file not needed anymore : 
+- in vite config specify a proxy that redirect /api into localhost
+- in azure you could : whether to use 
+  - the paid solution which is adding a link between swa and app service => you only have to add it in swa config (need standard version)
+     ==> you'll need to have a basePath set as "/api" on your api cause the swa is creating a proxy rule where : myswa.com/api/my-resources redirect to myapp/api/myresources.com
+     ==> can find the way here https://learn.microsoft.com/en-us/azure/static-web-apps/apis-app-service
+  - the free solution where : 
+    - add a staticwebapp.config.json file with routing redirection written manually (ie integrate the app service url) https://learn.microsoft.com/en-us/azure/static-web-apps/configuration
+    - configure cors on your app service manually
+  - this dont exist ...
+  
+  
