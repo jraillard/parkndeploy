@@ -25,3 +25,8 @@ wait ... it's still doesnt work but github logs show that env have been well giv
 
 that's because we're using vite to build our package (see build command in package.json), and build uses build time env variable not runtime env variable
 therefore you need to pass those during build command, not during deploy on swa
+
+
+Personnal Notes > static web app by default add env files behind swa host this is done by a proxy
+need to : 
+update vite config & axios to by default call /api and redirect to local backend

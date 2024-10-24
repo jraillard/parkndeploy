@@ -1,0 +1,8 @@
+{
+    "routes": [
+        {
+            "route": "/api/*",
+            "rewrite": "parkndeploy-app-jra.azurewebsites.net"
+        }
+    ]
+}
