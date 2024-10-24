@@ -30,3 +30,4 @@ therefore you need to pass those during build command, not during deploy on swa
 Personnal Notes > static web app by default add env files behind swa host this is done by a proxy
 need to : 
 update vite config & axios to by default call /api and redirect to local backend
+for swa we need to make a 

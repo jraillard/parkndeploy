@@ -8,7 +8,7 @@ export default defineConfig({
     proxy:
     {
       '/api': {
-        target: 'https://localhost:7085/',
+        target: 'https://purple-bush-04ee3e803.5.azurestaticapps.net/',
         secure: false, // Do not verify SSL certificates
         rewrite: (path) => path.replace(/^\/api/, ''), // remove /api from request path to match the backend
       },
