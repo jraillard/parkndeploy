@@ -25,17 +25,9 @@ As mentionned in [main README file](../README.md#frontend) :
 
 :one: Open the `./frontend` folder with Visual Studio Code
 
-:two: Create a `.env` file in `./frontend` folder with the following content 
+:two: Open a command line terminal using `CTRL+ù` hotkey or through the `Terminal menu` on the top of Visual Studio Code
 
-```yaml
-# This will allow the frontend app to contact our API
-# your_api_url_with_port should be, for instance, https://localhost:7085
-VITE_API_URL="your_api_url_with_port"
-```
-
-:three: Open a command line terminal using `CTRL+ù` hotkey or through the `Terminal menu` on the top of Visual Studio Code
-
-:four: Run the following commands : 
+:three: Run the following commands : 
 
 ```bash
 # This will download all the dependencies for the frontend
@@ -47,7 +39,7 @@ npm run dev
 # If it works, you should see a localhost URL link
 ```
 
-:five: Show the app in browser, here you have two possibilities : 
+:four: Show the app in browser, here you have two possibilities : 
 
 - Without Visual Studio Code debugger : just `CTRL+Click` on the localhost URL that is being displayed on the terminal you just launched before
 

@@ -22,8 +22,8 @@ The result expose, for each parkings :
 
 The code is made to be as simple as it could, the main objective of this course being the DevOps capabilities.
 
-- a CORS policy is implemented in order to access to our API from the frontend
-> &rarr; It will be done differently on Azure ... :smirk:
+- a `/api` basePath is implemented in order to access to our API from the frontend
+> &rarr; Adding a basePath is a good practice (it's by default on dotnet controllers but not on minimal apis) and will serve us when deploying the frontend on azure ... :smirk:
 
 - Swagger API is always displayed to facilitate that the API would be well deployed
 > In real-world, you might not want to expose it to every one for security purposes

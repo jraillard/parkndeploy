@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 
 export const client = (() => {
     return axios.create({
-        baseURL: import.meta.env.VITE_API_URL,
+        baseURL: '/api',
         headers: {
             Accept: "application/json, text/plain, */*",
         },
