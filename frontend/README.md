@@ -44,8 +44,8 @@ npm run dev
 - Without Visual Studio Code debugger : just `CTRL+Click` on the localhost URL that is being displayed on the terminal you just launched before
 
 - With Visual Studio Code debugger : 
-  - Hit `CTRL+SHIFT+D` hotkey or clic on ![debug icon](./doc/assets/vscode_debug_icon.png) in the left navigation bar
+  - Hit `CTRL+SHIFT+D` hotkey or click on ![debug icon](./doc/assets/vscode_debug_icon.png) in the left navigation bar
   
-  - Clic on ![play button](./doc/assets/vscode_debug_play_button.png) 
+  - Click on ![play button](./doc/assets/vscode_debug_play_button.png) 
 
   &rarr; Basically VS Code will run the [launch.json config](./frontend/.vscode/launch.json) which launch a Chrome navigator and attach the VS Code debugger to the frontend app process. This will allow you to debug through breakpoints and so on inside Visual Studio code (instead of spamming your source code with `console.log()` :stuck_out_tongue_winking_eye:).

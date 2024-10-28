@@ -6,7 +6,7 @@ In order to create an Azure Students account, follow the next steps :
 
 :one: Go the [AzureStudents WebSite](https://azure.microsoft.com/free/students/)
 
-:two: Clic on `Start free`
+:two: Click on `Start free`
 
 :three: Put your student email address
 

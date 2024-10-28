@@ -84,35 +84,17 @@ npm run dev
 - Without Visual Studio Code debugger : just `CTRL+Click` on the localhost URL that is being displayed on the terminal you just launched before
 
 - With Visual Studio Code debugger : 
-  - Hit `CTRL+SHIFT+D` hotkey or clic on ![debug icon](./doc/assets/vscode_debug_icon.png) in the left navigation bar
+  - Hit `CTRL+SHIFT+D` hotkey or click on ![debug icon](./doc/assets/vscode_debug_icon.png) in the left navigation bar
   
-  - Clic on ![play button](./doc/assets/vscode_debug_play_button.png) 
+  - Click on ![play button](./doc/assets/vscode_debug_play_button.png) 
 
   &rarr; Basically VS Code will run the [launch.json config](./frontend/.vscode/launch.json) which launch a Chrome navigator and attach the VS Code debugger to the frontend app process. This will allow you to debug through breakpoints and so on inside Visual Studio code (instead of spamming your source code with `console.log()` :stuck_out_tongue_winking_eye:).
 
 > Some details about how the Frontend App is made and what it does could be find in the [frontend README file](./frontend/README.md)
 
-## Getting Started with ParkNDeploy
+## Let's dive-In !
 
-### ***How would you define DevOps ?***
-
-&rarr; I kinda like the [Microsoft one](https://azure.microsoft.com/resources/cloud-computing-dictionary/what-is-devops) which says that it's the union from processes, and technologies from developpement (Dev) and operational (Ops) teams in order to accelerate the delivery of high-quality products to their customers.
-
-That means that `DevOps` is bound to all the application lifecycle : 
-- `PLAN` : Ideate, define features and track progress and bugs using agile development, kanban boards and KPI dashboard
-- `DEVELOP` : Develop code in teams (write, test, review, integration), build artifacts (application packages), use automations (tests, formating, security checks)
-- `DELIVER` : Deploy your application consistently and reliably, configure managed infrastructure, be able to deliver frequently
-- `OPERATE` : Maintain, control and get feedback on your application through monitoring, alerting and troubleshooting on production environments
-
-Embrace the `DevOps` is in vogue; it is a proven methodology :star:.
-
-In this initiation course we will focus on :
-- `DEVELOP` : Be able to package both frontend and backend into deployable artifacts
-- `DELIVER` : Provision an Azure Infrastructure and deploy your artifacts in it to be always able to to find a parking in Angers :sparkles:
-
-### Let's dive-In !
-
-:rocket: Buckle up, folks! It's time to blast off to the [first step](./doc/step1_deploy_backend.md) of our course. Ready, set, deploy!
+:rocket: Buckle up, folks! It's time to blast off to the [first step](./doc/step0_studying_devops.md) of our course. Ready, set, deploy!
 
 ## Additional Resources (for DevOps enthusiastics)
 
