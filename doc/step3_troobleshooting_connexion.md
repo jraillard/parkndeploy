@@ -1,33 +1,107 @@
-First : let's open chrome debugger, on network page and reload
+# Step 3 : Troobleshooting Frontend <==> API connexion
 
-you see ? the frontend is calling the backend on the same url ...
+## Find out the problem
 
-but you're url isnt there at all 
+Let's open your navigator debugger, go on the **Network tab** and reload so that we could see the request made on the API.
 
-in a normal application , we might have create an environment file that contains a key to store the backend url.
+You see ? The Frontend is calling the Backend but using the Frontend URL, weird huh ?
 
+It seems our call is being redirected by a proxy or something similar. :eyes:
 
-we could then edit it before building the app and send it to the static web app.
+Let's take a step back.
 
-finally you would have to setup cors policy on backend, et voilà !
+What would happend if we deployed our app in a basic provider like OVH for instance ?
 
-but that's not the way static web apps works.
+You wouldn't have such a proxy (by default), and would have seen the API URL in the chrome debugger Network tab.
 
-we'll have to use static web apps links and add our azure app service on it.
+You would then have to fix CORS error by adding a policy on your backend (whether on the App Service or inside the Backend App directly), et voilà !
 
-to do so we'll first have to upgrade the swa plan to standard (not a free one for sure).
+But that's not how Azure Static App works. :grimacing:
 
-and then create the link bicep resource.
+We'll have to use a what we call a `Linked Backend`.
 
-by default what swa does is that if you make a call like : myswa.com/api/my-endpoint ; it redirects to linked-backend-url.com/api/my-endpoint
+Of course Static Web App could be linked to multiple backend with differents [types](https://learn.microsoft.com/azure/static-web-apps/apis-overview#api-options) (depending on sku used).
 
-remember this ? in frontend and backend readme we were talking about the use of a basePath "/api"
+In order to link our Azure App Service instance, we'll need the **Standard** sku (which is not free :smirk:).
 
-thats only for this reason that we use it :D 
+> **Notes** : Some [constraints](https://learn.microsoft.com/azure/static-web-apps/apis-overview#constraints) have to be keep in mind, espacially having a `/api` basePath on your API, that's why it's mentionned in the [backend readme file](../backend/README.md).
 
-:warning: seems defining linked backend and swa in same files might sometimes cause whether not to find the resource or internal server error 
-=> create a separate module seems to work
-=> maybe "dependsOn" clause would solve it too (even if bicep should be doing it alone with "parent" clause :/)
+## Frontend Infrastructure update
 
-:warning: => now your backend only accept requests from the static web app (that's another consequence to azure static web app links)
-add cors policy on your backend could resolve it
+Let's start by updating the Static Web App sku :
+
+```bicep
+sku: {   
+    name: 'Standard'
+    tier: 'Standard'
+}
+```
+
+Then create a new bicep module `./nfrastructure/modules/staticWebAppBackend.bicep` : 
+
+```bicep
+param backendBindedResourceId string
+param swaName string
+param location string
+
+resource staticWebAppBackend 'Microsoft.Web/staticSites/linkedBackends@2022-03-01' = {
+  name: '${swaName}/backend'
+  properties: {
+    backendResourceId: backendBindedResourceId
+    region: location
+  }
+}
+```
+
+Notice that we need to pass our backend resource id in order to create our link. :eyes:
+
+So well, let's update our `./infrastructure/modules/appService.bicep` file to expose it :
+
+```bicep
+// Previous outputs 
+// ...
+output appServiceId string = app.id
+```
+
+And finally let's update our main bicep to create our new resource and pass the backend resource id :grin: :
+
+```bicep
+// Previous resources
+// ...
+module staticWebAppBackend 'modules/staticWebAppBackend.bicep' = {
+  name: 'staticWebAppBackend'
+  params: {
+    backendBindedResourceId: appService.outputs.appServiceId
+    swaName: staticWebApp.outputs.swaName
+    location: location
+  }
+}
+
+// Outputs 
+// ...
+```
+
+Perfect our bicep project now meets our goal. :heavy_check_mark:
+
+Push your code, trigger the workflow for the last time, and see the final result. :wink:
+
+## Final test
+
+If you followed every single steps, you should end with something like this : 
+
+![final app](./assets/final_deployed_app.png)
+
+Congratulation you just ended this workshop ! :sparkles:
+
+You'll now have three options :
+- Continue with [exercises](step4_further_improvements.md) to make some improvements on our project :eyes:
+- Studying by your own following some [additionnal resources](to_go_further.md) :rocket:
+- Leave it there, you heard enough about DevOps for now :dizzy_face:
+
+Whatever, I hope you enjoyed this initiation DevOps workshop as much as me to produce it. :metal:
+
+Feel free to leave me a comment on my [email adress](mailto:ju.raillard@hotmail.fr) or on my [LinkedIn](https://www.linkedin.com/in/julien-raillard/). :blush:
+
+You can also leave a star on the main project you forked to make it more visible. :pray:
+
+Thank you for following along, and happy coding! :computer:
