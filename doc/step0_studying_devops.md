@@ -69,7 +69,7 @@ CD pipelines are usually split into two main parts :
 
 You could think about the following process :
 
-:one: Developers are pushing they're code to the main branch with some nice new features
+:one: Developers are pushing their code to the main branch with some nice new features
 
 :two: An artifact is made by running a CI pipeline on this branch
 
