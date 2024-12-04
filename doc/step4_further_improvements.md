@@ -16,10 +16,6 @@ Every suggested improvements will be followed with clue to achieve it (if needed
 
 &rarr; In Git, a tag is a way to mark our source code and associate a version on it.
 
-:star: Add a DNS on your Azure Static Web App 
-
-&rarr; In order to note make you pay external tool, use [Azure DNS](https://learn.microsoft.com/azure/static-web-apps/custom-domain-azure-dns) but don't deploy it manually : use bicep as we did on the workshop.
-
 :star::star: Create a CI Pipeline specific for Merge Requests
 
 &rarr; The pipeline should **only** be triggered when a merge request is created 
