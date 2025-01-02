@@ -41,6 +41,12 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Edit package version with tag version
+      # You can use several github actions or use basic jq command line tool
+      run: |
+        echo "`jq '.version="${{ github.ref_name }}"' package.json`" > package.json
+      working-directory: ./frontend
+
     - name: Build the app
       working-directory: ./frontend
       run: |
