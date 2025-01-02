@@ -27,7 +27,7 @@ jobs:
       working-directory: ./backend # specify where to find the sln file
 
     - name: Archive the artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: backend-artifact
         path: ./backend/ParkNDeploy.Api/publish
@@ -48,7 +48,7 @@ jobs:
         npm run build
 
     - name: Archive the artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: frontend-artifact
         path: ./frontend/dist
