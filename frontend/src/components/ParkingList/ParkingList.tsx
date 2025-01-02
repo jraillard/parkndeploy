@@ -42,7 +42,7 @@ export default function ParkingList({ parkings }: Readonly<ParkingListProps>) {
         {parkings.map((parking: Parking) => (
           <Card
             key={parking.name}
-            className={computeCardBgColor(parking.status)}
+            className={`flex flex-col justify-between items-center ${computeCardBgColor(parking.status)}`}
           >
             <CardHeader>
               <CardTitle>{parking.name}</CardTitle>
