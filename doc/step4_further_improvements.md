@@ -12,9 +12,11 @@ Every suggested improvements will be followed with clue to achieve it (if needed
 
 ## New functionnalities
 
-:star: Trigger the pipeline using GitHub tag 
+:star: Trigger the deployment pipeline using git tag 
 
 &rarr; In Git, a tag is a way to mark our source code and associate a version on it.
+
+:bulb: You can restrict the tag to follow the semantic versionning : `MAJOR.MINOR.PATCH` , where MAJOR, MINOR and PATCH are a digit from 0 to 9.
 
 :star::star: Create a CI Pipeline specific for Merge Requests
 
@@ -23,30 +25,42 @@ Every suggested improvements will be followed with clue to achieve it (if needed
 &rarr; The pipeline would (in parallel or sequentially) : 
 - For Frontend app :
   - build the react app  
-- For Backend app :
-  - build / publish the dotnet app
+  - run the linting script 
+  
+  :bulb: See package.json file ... :eyes:
 
-&rarr; This aim to have a minimal check when someone in making a merge request on your repository before reviewing the code and merge it :wink:
+- For Backend app :
+  - [build the dotnet app in release mode](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-build)
+
+&rarr; This aim to have a minimal check when someone is making a merge request on your repository before reviewing the code and merge it :wink:
 
 :star::star: Create the CI Pipeline for releases and connect it to our CD Pipeline
 
-&rarr; The CD pipeline would (in parallel or sequentially) : 
+&rarr; At this step, CI release pipeline could just be single or multiple jobs (for both frontend & backend) executed before CD pipeline Jobs. Spliting into two distinct workflows is further refactoring step.
+
+&rarr; The CI release pipeline would (in parallel or sequentially) : 
 - For Frontend app :
   - build the react app
   - create and push the artifact
 - For Backend app :
-  - build / publish the dotnet app
+  - publish the dotnet app
   - create and push the artifact
 
 &rarr; The CD pipeline should be automatically triggered when your CI pipeline is ended
+
+&rarr; The CD pipeline should download the previous uploaded artifacts instead of building it
 
 :star::star::star: Display the app version in the Frontend app
 
 &rarr; You need to be able to trigger your pipeline by a tag, in order to get the version
 
-&rarr; You not necessarily need to have a CI pipeline but you can
+&rarr; You not necessarily need to have a CI release pipeline implemented but you can
 
-&rarr; You need to pass, somehow, the version to the App in order to display it ... :eyes:
+&rarr; You need to pass, somehow, the version to the App in order to display it, the [frontend README file](../frontend/README.md) might give your somes clues ... :eyes:
+
+:star::star::star::star: Your package version displayed should be consistent in your repository.
+
+&rarr; Means we can see the version in source code somehow 
 
 ## Refactorings
 
