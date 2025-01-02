@@ -1,11 +1,8 @@
 name: Deploy Infrastructure and Apps
 
 # Trigger the workflow on push to the solution branch or manually
-on:
-  push:
-    branches:
-      - solution
-  workflow_dispatch:
+on:  
+  [push, workflow_dispatch]
 
 permissions:
   id-token: write # Require write permission to Fetch an OIDC token (required for federated credential)

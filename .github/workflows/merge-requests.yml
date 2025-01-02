@@ -1,0 +1,30 @@
+name: Merge Requests Checks 
+
+on: pull_request
+  
+jobs:
+# two jobs, run in parallel for time saving
+  check_backend:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Build dotnet app & check for roslyn base line errors
+      run: dotnet build -c Release # dotnet build is doing both building & checking for roslyn base line errors
+      working-directory: ./backend # specify where to find the sln file
+
+  check_frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Build the app & run linting
+      working-directory: ./frontend
+      run: |
+        npm install
+        npm run build
+        npm run lint
