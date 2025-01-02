@@ -12,7 +12,7 @@ That means that `DevOps` is bound to all the application lifecycle :
 - `DELIVER` : Deploy your application consistently and reliably, configure managed infrastructure, be able to deliver frequently
 - `OPERATE` : Maintain, control and get feedback on your application through monitoring, alerting and troubleshooting on production environments
 
-Embrace the `DevOps` is in vogue; it is a proven methodology :star:.
+Embrace the `DevOps` is in vogue; it is a proven methodology. :star:
 
 In this initiation course we will focus on :
 - `DEVELOP` : Be able to package both frontend and backend into deployable artifacts
@@ -21,13 +21,13 @@ In this initiation course we will focus on :
 
 ## Infrastructure as Code
 
-Infrastructure as Code or  `IaC`, means that we will be allowed to create our Infrastructure, in Azure for instance, using code.
+Infrastructure as Code or  `IaC`, means that we will be allowed to create our Infrastructure, in Azure for our case, using code.
 
 There's two ways of doing IaC :
 - `imperative` : you'll have to describe each steps to end with the desired infrastructure (like an algorithm)
 - `declarative` : you'll have to defines the desired state and the tool you're using will be responsible of executing needed steps
 
-&rarr; Most of the time, you'll looking for declarative instead of imperative as it is more easy to read / maintain and evolve ; but sometimes you'll not be allowed to do such a thing.
+> :bulb: Most of the time, you'll looking for declarative instead of imperative as it is more easy to read / maintain and evolve ; but sometimes you'll not be allowed to do such a thing.
 
 Here's a non-exhaustive list of IaC tools :
 - Ansible (imperative, declarative in some ways)
@@ -38,9 +38,9 @@ Here's a non-exhaustive list of IaC tools :
 
 Continuous Integration, or `CI`, is a process that allow developers to gather all their works into a single or multiple deployable artifacts.
 
-You'll likely hear about "CI pipelines" as it could be schematized as a pipe starting with an event (Pull Request, git tag, deployment button, etc.), passing through integration steps : check for the application to still be buildable, automated tests (unit, integration, security), code formating and ending with one or more packages.
+You'll likely hear about ***CI pipelines*** as it could be schematized as a pipe starting with an event (Pull Request, git tag, deployment button, etc.), passing through integration steps : check for the application to still be buildable, running automated tests (unit, integration, security), code formating and ending with one or more packages.
 
-Packages can be of different shapes : zip files, images, docker images, vm images and are made so that they can be directly deployable without any modifications. In that way, CI pipelines are usually followed by `CD pipelines`.
+Packages can be of different shapes : zip files, images, docker images, vm images and should be made in order to be directly (or simply) deployable without any modifications. In that way, CI pipelines are usually followed by `CD pipelines` (Continuous Deploymoyent pipelines).
 
 Platform that are hosting your code usually offer a way of writing CI/CD pipelines :
 - GitHub Actions &rarr; GitHub
@@ -59,7 +59,7 @@ But you can also find some other third-party tools such as :
 
 Continuous Deployment, or `CD`, is a process that allow to deploy an artifact to an environment (dev, test, stating, production, etc.).
 
-CD pipelines could be directly triggered at the end of a CI pipeline or you could had some `guards` such as : manual validation, tests on artifact, wait for a schedule, you could think about *almost* anything (time will brake your imagination :stuck_out_tongue:).
+***CD pipelines*** could be directly triggered at the end of a CI pipeline or you could had some `guards` such as : manual validation, tests on artifact, wait for a schedule, you could think about *almost* anything (time will brake your imagination :stuck_out_tongue:).
 
 CD pipelines are usually split into two main parts : 
 - provisionning the environment infrastructure
@@ -81,7 +81,7 @@ You could think about the following process :
 
 Et voilà ! :sparkles:
 
-> CI/CD pipelines conception is hardly-bound to the team size, the application size and the time-to-deliver a feature : every project could have a unique one.
+> :bulb: CI/CD pipelines conception is hardly-bound to the team size, the application size and the time-to-deliver a feature : every project could have a unique one.
 
 ## What will we do with ParkNDeploy then ?
 

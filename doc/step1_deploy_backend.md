@@ -2,7 +2,7 @@
 
 ## State about Azure resources
 
-Before talking about `Bicep`, let's first talk a bit about Azure resources we will provision.
+Before talking about `Bicep`, let's first talk a bit about Azure resources we will provision. :eyes:
 
 We need to deploy a basic API, the Azure resource that best fit our needs is the [Azure App Service](https://azure.microsoft.com/fr-fr/products/app-service) as it is a simple Saas resource to use in that case.
 
@@ -30,7 +30,7 @@ As we mentionned before, `Bicep` is the tool that will allow us to provision our
 
 We'll going into a quite straightforward way of doing it but keep in mind that way more complex bicep projects could be made following the [official documentation](https://learn.microsoft.com/azure/azure-resource-manager/bicep/).
 
-First of all let's create a `infrastructure` folder at the project root that will look like this :
+First of all let's create an `infrastructure` folder at the project root that will look like this :
 
 ```
 ├── ...
@@ -45,10 +45,10 @@ First of all let's create a `infrastructure` folder at the project root that wil
 As the previous schema induced, a bicep project should have an entrypoint : the `main.bicep` file.
 
 It will be responsible of : 
-- defining the scope : [multiple values](https://learn.microsoft.com/azure/azure-resource-manager/bicep/deploy-to-resource-group?tabs=azure-cli) are allowed but we will use `resourceGroup` as everything will be provision in a single resource group.
-- taking some parameters : variables to help you name your resources for instance
-- create your resource : through modules or directly 
-- export some outputs : each resources exposes data that can be outputed such as the App Service default host for example
+- **defining the scope** : [multiple values](https://learn.microsoft.com/azure/azure-resource-manager/bicep/deploy-to-resource-group?tabs=azure-cli) are allowed but we will use `resourceGroup` as everything will be provision in a single resource group.
+- **taking some parameters** : variables to help you name your resources for instance
+- **create your resource** : through modules or directly 
+- **export some outputs** : each resources exposes data that can be outputed such as the App Service default host for example
 
 Add the following code to the `main.bicep` file :
 
@@ -59,7 +59,7 @@ targetScope = 'resourceGroup' // We'll deploy the resources in the provided reso
 param location string
 param project string
 
-// Here we'll use add an identifier to create a unique name for the App Service Plan, for example your trigram, so that everyone could deploy his own parkndeploy instance
+// Here we'll add an identifier to create a unique name for the App Service Plan, for example your trigram, so that everyone could deploy his own parkndeploy instance
 param identifier string
 
 // Create the AppServicePlan through the AppServicePlan module
@@ -114,7 +114,7 @@ resource plan 'Microsoft.Web/serverfarms@2022-09-01' = {
 output planId string = plan.id // Export the App Service identifier
 ```
 
-Pay attention about the `name` property. Resources names should be ***strictly unique*** in Azure. As a best practice, every resource name should contain the [resource type abreviation](https://learn.microsoft.com/azure/cloud-adoption-framework/ready/azure-best-practices/resource-abbreviations). Some are placing it as prefix, some as suffix and some in middle : there's no restriction on it, it's just better to be consistent on your different projects (in order to apply rules on resources creation / using inside an organization for instance).
+Pay attention about the `name` property. Resources names should be ***strictly unique*** in Azure. As a best practice, every resource name should contain the [resource type abreviation](https://learn.microsoft.com/azure/cloud-adoption-framework/ready/azure-best-practices/resource-abbreviations). Some are placing it as prefix, some as suffix and some in middle : there's no restriction on it, it's just better to be consistent on your different projects (in order to apply rules on resources inside an organization for instance).
 
 So for each of our resources we'll follow the following rule : projectName-resourceType-**identifier**, where identifier could be your trigram for instance (as every people in the course should have a unique resource name).
 
@@ -150,13 +150,13 @@ resource app 'Microsoft.Web/sites@2022-03-01' = {
 output appServiceName string = app.name // Export the App Service name for deployment
 ```
 
-Well done friends, our bicep project is ready to be run, let's continue with our CD pipeline :eyes:.
+Well done friends, our bicep project is ready to be run, let's continue with our CD pipeline. :eyes:
 
 ## Create infrastructure deployment pipeline
 
-Pipelines in Github are creating with GitHub Action tool.
+Pipelines in Github are created with GitHub Action tool.
 
-What a better way to understand the main concepts (workflows, events, jobs, actions) than read the official [getting started first page](https://docs.github.com/actions/about-github-actions/understanding-github-actions) ? :eyes:
+What a better way to understand the main concepts (workflows, events, jobs, actions) than read the official [getting started first page](https://docs.github.com/actions/about-github-actions/understanding-github-actions) ? :mag:
 
 Seems clear ? Then look at our first version of the `.github/workflows/deploy-infra-and-apps.yml` file will be using for our entire workshop : 
 
@@ -215,7 +215,7 @@ Let's take a time to explain the syntax a bit :
   - `vars.xxx` : organization (on github enterprise instance) / repository / environment scoped variables defined in your `GitHub Settings` under `Secrets and variables / Actions`
   - `secrets.xxx` : organization (on github enterprise instance) / repository / environement secrets defined in your `GitHub Settings` under `Secrets and variables / Actions`
   
-  &rarr; Secrets are masked by default in every logs, variables could also beeing masked by [applying one](https://docs.github.com/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions#masking-a-value-in-a-log).
+  &rarr; ***Secrets are masked by default in every logs***, variables could also beeing masked by [applying one](https://docs.github.com/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions#masking-a-value-in-a-log).
 
 
   > **Note** : In this workshop we're using GitHub secrets functionnality for simplicity but GitHub also allows you to store them in any third party tool such as Azure Key Vault or HashiCorp Vault for instance. :wink:
@@ -263,9 +263,11 @@ How to do so ?
 
 :two: Copy the values for Client ID, Subscription ID, and Directory (tenant) ID to use later in your GitHub Actions workflow.
 
-&rarr; **AZURE_CLIENT_ID & AZURE_SUBSCRIPTION_ID** could be find in your **UAI** ; **AZURE_TENANT_ID** could be find in the Microsoft Entra ID Service (look for it in the main azure search bar). You can add them as GitHub secrets as you did before with **AZURE_REGION**
+&rarr; **AZURE_CLIENT_ID & AZURE_SUBSCRIPTION_ID** could be find in your **UAI** ; **AZURE_TENANT_ID** could be find by looking for "Tenant properties" in the search bar. You can add them as GitHub secrets as you did before with **AZURE_REGION**
 
-:three: Assign an appropriate role to your user-assigned managed identity by following this [doc](https://learn.microsoft.com/entra/identity/managed-identities-azure-resources/how-manage-user-assigned-managed-identities?pivots=identity-mi-methods-azp#manage-access-to-user-assigned-managed-identities)
+:three: Assign an appropriate role to your user-assigned managed identity by going on its `Azure Role Assignement section` and using its `Add role assignment preview button`
+
+![Add UAI role](./assets/uai_role_assignment.png)
 
 &rarr; Set `scope` to **subscriptions** (means you can do things on your subscriptions services) and **contributor** to `role` (meaning you have full access despite Role base access assignement, azure blueprint management and so on => we dont need that at all)
 
@@ -279,11 +281,11 @@ How to do so ?
 - `environment` : production 
 - `name` : parkdndeploy-github-fed-cred-env-prod-yourIdentifier (the name should reflect your use case as you might need to create multiple one for the same uai)
 
-:bulb: `issuer` is auto-generated and allows OIDC to recognize the caller as a GitHub action. `subject identifier` will be generated by GitHub when we'll try to connect and provision resources on Azure. Here we created a Federated Credential for when we're executing a Github Action in `production environment`
+:bulb: `issuer` is auto-generated and allows OIDC to recognize the caller as a GitHub action. `subject identifier` will be generated by GitHub when we'll try to connect and provision resources on Azure. Here we created a Federated Credential for when we're executing a Github Action in `production environment`.
 
 Et voilà :sparkles:
 
-Let's come back to our CD pipeline now :eyes:.
+Let's come back to our CD pipeline now. :eyes:
 
 ## Deploy Infrastructure
 
@@ -321,7 +323,7 @@ Click on it (this could take time) and .. tadah ! You're App Service is created 
 
 ![Default App Service page](./assets/app_service_default_page.png)
 
-Now let's deploy our backend API on it :eyes:.
+Now let's deploy our backend API on it. :rocket:
 
 ## Deploy Backend API
 
@@ -384,7 +386,7 @@ Through the `outputs` keyword we're exposing key-value pairs.
 
 Notice that here again we're using a value coming from a step, the `bicep_deploy` one : **steps.bicep_deploy.outputs.appServiceName** (that's the purpose of adding an **id** on this step :wink:).
 
-Well, our CD pipeline is finally ready so push the code and wait for our app to be deployed :rocket:.
+Well, our CD pipeline is finally ready so push the code and wait for our app to be deployed. :rocket:
 
 :bulb: In your GitHub workflow logs, you could access to the deployed API URL or you can also go through **Azure Portal** to your App Service instance and go click on **Default Domain** link.
 
@@ -392,7 +394,7 @@ The app can take some time to launch, but when it's done .... WUT, we got a 404 
 
 This is quite normal : it is a pure API that not exposing any endpoint on the root path, nevertheless ...
 
-For those who read the [backend readme file](../backend/README.md), you know that our API is exposing a Swagger UI :smirk:.
+For those who read the [backend readme file](../backend/README.md), you know that our API is exposing a Swagger UI right ? :smirk:
 
 Add `/api/swagger` to the url and you should see something like this :
 

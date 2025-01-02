@@ -1,12 +1,12 @@
 # Step 4 : Further improvements
 
-Below you'll find some improvements on our project.
+Below you'll find some improvements suggestions to our project.
 
 Those will be splited in two types : functionnalities, refactorings.
 
 As its name implies, it would be better to implement functionnalities before thinking about refactorings but the choice is yours. :wink:
 
-Stars number will indicate the improvement implementation difficulty.
+Stars number will indicate the difficulty.
 
 Every suggested improvements will be followed with clue to achieve it (if needed).
 
@@ -28,7 +28,7 @@ Every suggested improvements will be followed with clue to achieve it (if needed
 
 &rarr; This aim to have a minimal check when someone in making a merge request on your repository before reviewing the code and merge it :wink:
 
-:star::star: Create the CI Pipeline and connect it to our CD Pipeline
+:star::star: Create the CI Pipeline for releases and connect it to our CD Pipeline
 
 &rarr; The CD pipeline would (in parallel or sequentially) : 
 - For Frontend app :

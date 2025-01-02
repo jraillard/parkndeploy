@@ -6,7 +6,7 @@ The following ressources might fit your needs as they cover all the DevOps conce
 
 :arrow_forward: [John Savill's Masterclass](https://www.youtube.com/watch?v=R74bm8IGu2M&list=PLlVtbbG169nFr8RzQ4GIxUEznpNR53ERq) 
 
-&rarr; A comprehensive YouTube playlist created by John Savill, a Microsoft MVP. This masterclass covers a wide range of topics related to DevOps, cloud computing, and Microsoft technologies. John Savill has also created numerous playlists for almost every Microsoft certification, making his content a valuable resource for both beginners and advanced learners.
+&rarr; A comprehensive YouTube playlist created by John Savill, an australian Microsoft MVP. This masterclass covers a wide range of topics related to DevOps, cloud computing, and Microsoft technologies. John Savill has also created numerous playlists for almost every Microsoft certification, making his content a valuable resource for both beginners and advanced learners.
 
 :book: [Designing and Implementing Microsoft DevOps Solutions course](https://learn.microsoft.com/credentials/certifications/exams/az-400/) 
 

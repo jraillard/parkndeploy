@@ -3,7 +3,7 @@
 ## State about Azure resources
 
 In order to deploy a react application there's multiple ways of doing it :
-- Azure App Service : quite a bit expension (CPU wise) for an SPA
+- Azure App Service : quite a bit expensive (CPU wise) for an SPA
 - [Azure Storage Account](https://byalexblog.net/article/react-azure-storage/) : basic storage resources allowing you to store and expose your html files (that's basically what is a SPA under the hood)
 - Azure Static Web app : quite new resource created specially for static apps such as SPAs
 
@@ -11,16 +11,16 @@ We will then go for this option : `Azure Static Web App`.
 
 This resource is offering tons of usefull [functionnalities](https://learn.microsoft.com/azure/static-web-apps/overview) but here we gonna stay simple : we just want to deploy our App on it.
 
-:bulb: For instance, we not gonna use [Preview environments](https://learn.microsoft.com/azure/static-web-apps/preview-environments) (but you can after this workshop if you are interested :smirk:).
+:bulb: For instance, we not gonna use [Preview environments](https://learn.microsoft.com/azure/static-web-apps/preview-environments) (but you can after this workshop if you are interested in :smirk:).
 
 Our new resource will be part of our previously created resource group, therefore our Azure infrastructure will look like this : 
 
 ```
 tenant                                  <- no need to be provisionned (but authentication required ...)
     └── subscription                    <- no need to be provisionned (but authentication required ...)
-        └── resourceGroup                  
-            ├── appServicePlan             
-            |   └── appService
+        └── resourceGroup               <- already provisionned   
+            ├── appServicePlan          <- already provisionned   
+            |   └── appService          <- already provisionned
             └── staticWebApp
 ```
 
@@ -28,7 +28,7 @@ tenant                                  <- no need to be provisionned (but authe
 
 As we did for our `App Service` resource, we gonna create a `Static Web App` bicep module.
 
-Create a `./infrastructure/modules/staticWebApp.bicep` with the following code : 
+Create a `./infrastructure/modules/staticWebApp.bicep` file with the following code : 
 
 ```bicep
 param location string
@@ -110,7 +110,7 @@ When it's finished come back to the **Azure Portal** and look for your freshly d
 
 On the **Overview** page, look for the `URL` link and click on it.
 
-:bulb: The URL is pseudo-randomly generated, to have a custom domain it requires a [bit more of work](https://learn.microsoft.com/en-us/azure/static-web-apps/custom-domain).
+:bulb: The URL is pseudo-randomly generated, to have a custom domain it requires [few more steps](https://learn.microsoft.com/en-us/azure/static-web-apps/custom-domain).
 
 You should face with the following page telling you that you're resource is ready to host your code : 
 
@@ -118,7 +118,7 @@ You should face with the following page telling you that you're resource is read
 
 ## Deploy Frontend App
 
-You may know what we gonna do right ? 
+You may know what we gonna do now right ? 
 
 We'll create another deployment job for frontend, `deploy_frontend` for instance.
 
@@ -175,7 +175,7 @@ deploy_frontend:
 
 > **Note** : You may have seen that now, two jobs will depends on **deploy_infrastructure** job. This will cause both **deploy_frontend** and **deploy_backend** to be run in parallel. :eyes:
  
-Commit, Push, run your workflow and ... what did happends ?
+Commit, Push, run your workflow and ... what happened ?
 
 `azure/static-web-apps-deploy@v1` action is telling you that a deployment token is needed but ***what is that damn token*** ? :confused:
 
@@ -191,7 +191,7 @@ Here you have two options :
 - Get it manually from your resource on **Azure Portal** and store it as a secret and use it in your workflow
 - Get it automatically during your job through `az cli`, assign it in a workflow scoped variable and use it directly
 
-To be consistent with the workshop, we'll go on the automated way.
+To be consistent with the workshop, we'll go on the automated way (also to not push your secret on the web ...) but you could try the manual way if you want. :wink:
 
 Add the following step in your `deploy_frontend` job : 
 
