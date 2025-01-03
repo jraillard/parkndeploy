@@ -76,7 +76,7 @@ Every suggested improvements will be followed with clue to achieve it (if needed
 - workflow_dispatch 
 - workflow_run (:warning: like workflow_dispatch, it will not work if your workflows aren't on default branch)
 
-When you're, compare your finds with this [article](https://jiminbyun.medium.com/github-actions-workflow-run-vs-workflow-call-3f1a5c6e19d4). :eyes:
+When you're done, compare your finds with this [article](https://jiminbyun.medium.com/github-actions-workflow-run-vs-workflow-call-3f1a5c6e19d4). :eyes:
 
 :star::star::star: Allow developer team to trigger the CD pipeline manually by specifying artifacts
 
