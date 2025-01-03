@@ -201,7 +201,7 @@ jobs:
 Let's take a time to explain the syntax a bit : 
 - the `on` keyword allows you to defined events 
   - `push` means every push on any remoted branch will trigger the workflow
-  - `workflow_dispatch` means that you can trigger manually the workflow on GitHub Action tab on your GitHub repository (only work if the workflow is on the repository default branch)
+  - `workflow_dispatch` means that you can trigger manually the workflow on GitHub Action tab on your GitHub repository (only work if the workflow is on the repository default branch or if you trigger it using Github CLI)
 - the `env` keyword allows for defining workflow scoped environment variable, here we use it to define the resource group name we'll use multiple times
 - `deploy_infrastructure` is our first job responsible of provisionning our Azure infrastructure (as its names implies)
   - `runs-on` define the **runner** where our job steps will be executed, [many are available](https://github.com/actions/runner-images) depending on your needs

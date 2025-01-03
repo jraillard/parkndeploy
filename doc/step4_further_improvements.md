@@ -64,18 +64,22 @@ Every suggested improvements will be followed with clue to achieve it (if needed
 
 ## Refactorings
 
-:star: Use job template instead of having job code inside your workflow file
+:star: Match the least privilege principle 
 
-&rarr; Job template would allows you to use it in different ways. For instance use the `deploy_frontend` in a `qa` environment for testing also
-
-&rarr; Place your templates in `./github/workflows/templates` folder 
-
-:bulb: In a real-world you would have those templates in a common repository for your company but here a separate folder would be enough :blush:
+&rarr; Refactor the permissions to be retrieve only when needed (not on workflow level here ... :eyes:)
 
 :star::star: Split your CI and CD pipeline into two workflows
 
 &rarr; A tag should trigger CI workflow and this workflow should trigger CD workflow if it pass
 
+:bulb: Test the two possibilities and analyze pros and cons :
+- workflow_dispatch 
+- workflow_run (:warning: like workflow_dispatch, it will not work if your workflows aren't on default branch)
+
+When you're, compare your finds with this [article](https://jiminbyun.medium.com/github-actions-workflow-run-vs-workflow-call-3f1a5c6e19d4). :eyes:
+
 :star::star::star: Allow developer team to trigger the CD pipeline manually by specifying artifacts
 
 &rarr; You'll need to allow manual workflow trigger and retrieve the artifacts url using the GitHub API
+
+&rarr; Remember that workflow_dispatch will only works if youre workflows are on default branch or if you're using GitHub CLI to trigger it.
