@@ -1,0 +1,96 @@
+name: Build releases
+
+# Trigger the workflow on tags (means versionned releases)
+on:  
+  push: 
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+' # means every tags that follows basic semantic version (MAJOR.MINOR.PATCH) will trigger the pipeline
+  
+jobs:
+  build_backend_artifact:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Publish the app
+      run: dotnet publish -c Release --property:PublishDir=publish # Publish the app to the publish folder of the API project
+      working-directory: ./backend # specify where to find the sln file
+
+    - name: Archive the artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: backend-artifact
+        path: ./backend/ParkNDeploy.Api/publish
+        retention-days: 5 # default is 90 days, quite a bit long
+  
+  build_frontend_artifact:
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:  
+      contents: write # Require write permission to be able to commit changes on the repository
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with: 
+        fetch-depth: 0 # Fetch all history to be able to find the branch name
+
+    # Job triggered by a tag in github cause the git HEAD to be detached
+    # So we need to find the branch name to be able to commit the package.json change
+    - name: Get branch name
+      id: get_branch
+      run: |
+        # Find the branch that the tag is associated with
+        BRANCH=$(git branch -r --contains "$GITHUB_SHA" | grep -v '\->' | sed 's|origin/||' | head -n 1)
+        echo "Branch: $BRANCH"
+        echo "branch_name=$BRANCH" >> $GITHUB_OUTPUT
+    
+    # Now leave the detached HEAD state
+    - name: Check out the branch
+      run: |
+        git checkout ${{ steps.get_branch.outputs.branch_name }}
+
+    - name: Edit package version with tag version
+      # You can use several github actions or use basic jq command line tool
+      run: |
+        echo "`jq '.version="${{ github.ref_name }}"' package.json`" > package.json
+      working-directory: ./frontend
+
+    - name: Build the app
+      working-directory: ./frontend
+      run: |
+        npm install
+        npm run build
+
+    - name: Archive the artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: frontend-artifact
+        path: ./frontend/dist
+        retention-days: 5 # default is 90 days, quite a bit long
+    
+    # Artifact is published so now we can commit the package json change
+    # Use github-actions[bot] to commit the change instead of your own credentials
+    - name: Set up Git
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+    
+    - name: Commit changes
+      run: |
+        git add -A
+        git commit -m "feat(version) : Update package json version to ${{ github.ref_name }}"
+
+    - name: Push changes
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        git push origin HEAD
+
+  call_deploy_workflow:
+    needs: [build_backend_artifact, build_frontend_artifact]
+    uses: jraillard/parkndeploy/.github/workflows/deploy-infra-and-apps.yml@feat/split-ci-cd-workflows    
+    secrets: inherit
