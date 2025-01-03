@@ -94,5 +94,5 @@ jobs:
     needs: [build_backend_artifact, build_frontend_artifact]
     permissions:
         id-token: write # Require write permission to Fetch an OIDC token (required for federated credential)
-    uses: jraillard/parkndeploy/.github/workflows/deploy-infra-and-apps.yml@feat/split-ci-cd-workflows    
+    uses: jraillard/parkndeploy/.github/workflows/deploy-infra-and-apps.yml@solution
     secrets: inherit
