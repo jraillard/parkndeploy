@@ -2,7 +2,9 @@ name: Deploy Infrastructure and Apps
 
 # Trigger the CD workflow on the completion of the CI workflow
 on:  
-  workflow_call:
+  workflow_run:
+    workflows: ["Build releases"]
+    types: [completed]
 
 env: 
   AZURE_RG_NAME: rg-${{ vars.PROJECT_NAME }}-${{ vars.AZURE_RESOURCE_IDENTIFIER }}

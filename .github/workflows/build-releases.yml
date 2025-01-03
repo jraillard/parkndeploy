@@ -89,10 +89,3 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         git push origin HEAD
-
-  call_deploy_workflow:    
-    needs: [build_backend_artifact, build_frontend_artifact]
-    permissions:
-        id-token: write # Require write permission to Fetch an OIDC token (required for federated credential)
-    uses: jraillard/parkndeploy/.github/workflows/deploy-infra-and-apps.yml@feat/split-ci-cd-workflows    
-    secrets: inherit
