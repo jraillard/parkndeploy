@@ -87,6 +87,11 @@ jobs:
         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }} 
   
+    - name: Get Static Web App deployment token
+      run: |      
+        SWA_DEPLOYMENT_TOKEN=$(az staticwebapp secrets list -n ${{ needs.deploy_infrastructure.outputs.staticWebAppName }} -o tsv --query properties.apiKey)
+        echo SWA_DEPLOYMENT_TOKEN=$SWA_DEPLOYMENT_TOKEN >> $GITHUB_ENV
+  
     - name: Deploy frontend to Static Web App
       uses: azure/static-web-apps-deploy@v1
       with:
@@ -96,7 +101,4 @@ jobs:
         skip_app_build: true
         skip_api_build: true
     
-    - name: Get Static Web App deployment token
-      run: |      
-        SWA_DEPLOYMENT_TOKEN=$(az staticwebapp secrets list -n ${{ needs.deploy_infrastructure.outputs.staticWebAppName }} -o tsv --query properties.apiKey)
-        echo SWA_DEPLOYMENT_TOKEN=$SWA_DEPLOYMENT_TOKEN >> $GITHUB_ENV
+    
