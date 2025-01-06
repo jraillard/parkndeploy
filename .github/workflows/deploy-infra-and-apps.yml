@@ -102,14 +102,3 @@ jobs:
         action: upload
         skip_app_build: true
         skip_api_build: true
-  
-    - name: Deploy frontend to Static Web App
-      uses: azure/static-web-apps-deploy@v1
-      with:
-        app_location: frontend/dist
-        action: upload
-        skip_app_build: true
-        skip_api_build: true
-
-    
-   
