@@ -36,3 +36,32 @@ jobs:
         parameters: project=${{ vars.PROJECT_NAME }} location=${{ secrets.AZURE_REGION }} identifier=${{ vars.AZURE_RESOURCE_IDENTIFIER }}
         resourceGroupName: ${{ env.AZURE_RG_NAME }}
 
+  deploy_backend:
+    runs-on: ubuntu-latest
+    needs: deploy_infrastructure
+    environment: production
+    
+    outputs:
+      appServiceName: ${{ steps.bicep_deploy.outputs.appServiceName }}
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Publish the app
+      run: dotnet publish -c Release --property:PublishDir=publish # Publish the app to the publish folder of the API project
+      working-directory: ./backend # specify where to find the solution file
+
+    - name: Login to Azure 
+      uses: azure/login@v2
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      
+    - name: Deploy backend to App Service
+      uses: azure/webapps-deploy@v2
+      with: 
+        app-name: ${{ needs.deploy_infrastructure.outputs.appServiceName }} # Access to the previous job output to get the appServiceName deployed with bicep
+        package: ./backend/ParkNDeploy.Api/publish # Path to the previously published app
+
