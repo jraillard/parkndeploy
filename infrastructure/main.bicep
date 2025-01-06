@@ -8,6 +8,7 @@ param swaLocation string // Static Web App locations are limited, we need to add
 // Here we'll add an identifier to create a unique name for the App Service Plan, for example your trigram, so that everyone could deploy his own parkndeploy instance
 param identifier string
 
+
 // Create the AppServicePlan through the AppServicePlan module
 module appServicePlan 'modules/appServicePlan.bicep' = {
   name: 'appServicePlan'
@@ -38,6 +39,16 @@ module staticWebApp 'modules/staticWebApp.bicep' = {
     identifier: identifier
   }
 }
+
+module staticWebAppBackend 'modules/staticWebAppBackend.bicep' = {
+  name: 'staticWebAppBackend'
+  params: {
+    backendBindedResourceId: appService.outputs.appServiceId
+    swaName: staticWebApp.outputs.swaName
+    location: location
+  }
+}
+
 
 // Export App Service Name
 output appServiceName string = appService.outputs.appServiceName // Export AppServiceName in order to deploy the API later on
