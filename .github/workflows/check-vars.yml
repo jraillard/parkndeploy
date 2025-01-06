@@ -1,0 +1,39 @@
+name: Check Variables
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  check-vars:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check vars.PROJECT_NAME
+        run: |
+          if [ -z "${{ vars.PROJECT_NAME }}" ]; then
+            echo "vars.PROJECT_NAME is not defined."
+            exit 1
+          else
+            echo "vars.PROJECT_NAME is defined: ${{ vars.PROJECT_NAME }}"
+          fi
+
+      - name: Check vars.AZURE_RESOURCE_IDENTIFIER
+        run: |
+          if [ -z "${{ vars.AZURE_RESOURCE_IDENTIFIER }}" ]; then
+            echo "vars.AZURE_RESOURCE_IDENTIFIER is not defined."
+            exit 1
+          else
+            echo "vars.AZURE_RESOURCE_IDENTIFIER is defined: ${{ vars.AZURE_RESOURCE_IDENTIFIER }}"
+          fi
+
+      - name: Check secrets.AZURE_REGION
+        run: |
+          if [ -z "${{ secrets.AZURE_REGION }}" ]; then
+            echo "secrets.AZURE_REGION is not defined."
+            exit 1
+          else
+            echo "secrets.AZURE_REGION is defined: ${{ secrets.AZURE_REGION }}"
+          fi
