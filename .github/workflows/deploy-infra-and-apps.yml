@@ -45,7 +45,7 @@ jobs:
 
     outputs:
       appServiceName: ${{ steps.bicep_deploy.outputs.appServiceName }}
-      
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -57,14 +57,14 @@ jobs:
     - name: Login to Azure 
       uses: azure/login@v2
       with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
     
     - name: Deploy backend to App Service
       uses: azure/webapps-deploy@v2
       with: 
-          app-name: ${{ needs.deploy_infrastructure.outputs.appServiceName }} # Access to the previous job output to get the appServiceName deployed with bicep
-          package: ./backend/ParkNDeploy.Api/publish # Path to the previously published app
+        app-name: ${{ needs.deploy_infrastructure.outputs.appServiceName }} # Access to the previous job output to get the appServiceName deployed with bicep
+        package: ./backend/ParkNDeploy.Api/publish # Path to the previously published app
 
    
