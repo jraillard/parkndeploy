@@ -40,5 +40,14 @@ module staticWebApp 'modules/staticWebApp.bicep' = {
   }
 }
 
+module staticWebAppBackend 'modules/staticWebAppBackend.bicep' = {
+  name: 'staticWebAppBackend'
+  params: {
+    backendBindedResourceId: appService.outputs.appServiceId
+    swaName: staticWebApp.outputs.swaName
+    location: location
+  }
+}
+
 output appServiceName string = appService.outputs.appServiceName // Export AppServiceName in order to deploy the API later on
 output staticWebAppName string = staticWebApp.outputs.swaName // Export StaticWebAppName in order to deploy the Frontend late
