@@ -12,7 +12,8 @@ jobs:
     
     outputs:
       appServiceName: ${{ steps.bicep_deploy.outputs.appServiceName }}
-    
+      staticWebAppName: ${{ steps.bicep_deploy.outputs.staticWebAppName }}
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -37,7 +38,7 @@ jobs:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         region: ${{ secrets.AZURE_REGION }}
         template: ./infrastructure/main.bicep
-        parameters: project=${{ vars.PROJECT_NAME }} location=${{ secrets.AZURE_REGION }} identifier=${{ vars.AZURE_RESOURCE_IDENTIFIER }}
+        parameters: project=${{ vars.PROJECT_NAME }} location=${{ secrets.AZURE_REGION }} swaLocation=${{ secrets.AZURE_SWA_REGION }} identifier=${{ vars.AZURE_RESOURCE_IDENTIFIER }}
         resourceGroupName: ${{ env.AZURE_RG_NAME }}
 
   deploy_backend:
@@ -46,9 +47,6 @@ jobs:
     environment: production
     permissions:
       id-token: write # Require write permission to Fetch an OIDC token (required for federated credential) and write it, it will be automatically used on actions / cli that need it
-      
-    outputs:
-      appServiceName: ${{ steps.bicep_deploy.outputs.appServiceName }}
     
     steps:
     - name: Checkout repository
@@ -71,3 +69,37 @@ jobs:
         app-name: ${{ needs.deploy_infrastructure.outputs.appServiceName }} # Access to the previous job output to get the appServiceName deployed with bicep
         package: ./backend/ParkNDeploy.Api/publish # Path to the previously published app
 
+  deploy_frontend:
+      runs-on: ubuntu-latest
+      needs: deploy_infrastructure
+      environment: production
+      permissions:
+          id-token: write
+
+      steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build the app
+        run: npm install && npm run build
+        working-directory: ./frontend    
+
+      - name: Login to Azure 
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }} 
+      - name: Get Static Web App deployment token
+        run: |      
+          SWA_DEPLOYMENT_TOKEN=$(az staticwebapp secrets list -n ${{ needs.deploy_infrastructure.outputs.staticWebAppName }} -o tsv --query properties.apiKey)
+          echo SWA_DEPLOYMENT_TOKEN=$SWA_DEPLOYMENT_TOKEN >> $GITHUB_ENV
+
+      - name: Deploy frontend to Static Web App
+        uses: azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ env.SWA_DEPLOYMENT_TOKEN }}
+          app_location: frontend/dist
+          action: upload
+          skip_app_build: true
+          skip_api_build: true
