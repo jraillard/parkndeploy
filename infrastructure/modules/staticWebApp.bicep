@@ -6,9 +6,10 @@ resource swa 'Microsoft.Web/staticSites@2022-09-01' = {
   name: '${project}-swa-${identifier}'
   location: location
   
-  sku: {
-    name: 'Free'
-  }  
+  sku: {   
+    name: 'Standard'
+    tier: 'Standard'
+}
 
   properties: {} // Even empty, it's mandatory ...
 }
