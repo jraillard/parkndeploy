@@ -5,6 +5,7 @@ param identifier string
 // App Service Plan identifier that will host our App Service
 param planId string
 
+
 resource app 'Microsoft.Web/sites@2022-03-01' = {
   name: '${project}-app-${identifier}'
   location: location
