@@ -1,5 +1,10 @@
+name: CD Pipeline
+
 on:
-  workflow_dispatch:
+    workflow_run:
+      workflows: ["CI Pipeline"] 
+      types:
+        - completed
 
 permissions:
   id-token: write
