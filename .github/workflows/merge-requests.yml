@@ -1,9 +1,6 @@
 on: 
     pull_request:
   
-permissions:
-    id-token: write
-  
 env: 
     AZURE_RG_NAME: ${{ vars.PROJECT_NAME }}-rg-${{ vars.AZURE_RESOURCE_IDENTIFIER }}
     
@@ -25,11 +22,17 @@ jobs:
 
     build_backend:
         runs-on: ubuntu-latest
-
+        
         steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
             - name: Build the app
               run: dotnet build
               working-directory: ./backend
+
+            
+
         
       
   
