@@ -1,0 +1,49 @@
+on:
+  push:
+  workflow_dispatch: 
+
+jobs:
+  build_frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies and build the React app
+        run: npm install && npm run build
+        working-directory: ./frontend
+
+      - name: Upload frontend artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: frontend-artifact
+          path: ./frontend/build/*
+
+  build_backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Publish .NET app
+        run: dotnet publish -c Release --property:PublishDir=publish
+        working-directory: ./backend
+
+      - name: Upload backend artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: backend-artifact
+          path: ./backend-publish
+
+  trigger_cd_pipeline:
+    needs: [build_frontend, build_backend]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger CD Pipeline
+        uses: peter-evans/workflow-dispatch@v1
+        with:
+          repository: Neros5/parkndeploy
+          workflow: cd-pipeline.yml
+          ref: refs/heads/main
