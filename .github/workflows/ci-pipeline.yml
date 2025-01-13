@@ -43,8 +43,9 @@ jobs:
     steps:
       - name: Trigger CD Pipeline
         run: |
-          curl -X POST https://api.github.com/repos/Neros5/parkndeploy/dispatches \
-          -H 'Accept: application/vnd.github.everest-preview+json' \
-          -u ${{ secrets.BATMAN }} \
-          --data '{"event_type": "Trigger Workflow", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'" }}'
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.BATMAN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/Neros5/parkndeploy/actions/workflows/cd-pipeline.yml/dispatches \
+            -d '{"ref":"main"}'
       - uses: actions/checkout@v3
