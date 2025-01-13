@@ -1,0 +1,50 @@
+name: CI Pipeline for Merge Requests
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize # Trigger the pipeline when a PR is updated
+
+jobs:
+  frontend_checks:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16' # Specify your Node.js version
+
+    - name: Install dependencies
+      run: npm install
+      working-directory: ./frontend
+
+    - name: Build React App
+      run: npm run build
+      working-directory: ./frontend
+
+    - name: Run Linting
+      run: npm run lint
+      working-directory: ./frontend
+
+  backend_checks:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '7.0' # Specify your .NET version
+
+    - name: Restore dependencies
+      run: dotnet restore
+      working-directory: ./backend
+
+    - name: Build Backend App
+      run: dotnet build -c Release
+      working-directory: ./backend
