@@ -47,5 +47,5 @@ jobs:
             -H "Authorization: token ${{ secrets.BATMAN }}" \
             -H "Accept: application/vnd.github.v3+json" \
             https://api.github.com/repos/Neros5/parkndeploy/actions/workflows/cd-pipeline.yml/dispatches \
-            -d '{"ref":"main"}'
+            -d '{"ref":"test-branch"}'
       - uses: actions/checkout@v3
