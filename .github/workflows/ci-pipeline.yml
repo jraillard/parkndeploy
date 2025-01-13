@@ -1,5 +1,3 @@
-name: CI Pipeline
-
 on:
   push:
   workflow_dispatch: 
@@ -38,3 +36,15 @@ jobs:
         with:
           name: backend-artifact
           path: ./backend-publish
+
+  trigger_cd_pipeline:
+    needs: [build_frontend, build_backend]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger CD Pipeline
+        run: |
+          curl -X POST https://api.github.com/repos/Neros5/parkndeploy/dispatches \
+          -H 'Accept: application/vnd.github.everest-preview+json' \
+          -u ${{ secrets.BATMAN }} \
+          --data '{"event_type": "Trigger Workflow", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'" }}'
+      - uses: actions/checkout@v3
