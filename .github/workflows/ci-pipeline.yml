@@ -38,14 +38,3 @@ jobs:
         with:
           name: backend-artifact
           path: ./backend-publish
-
-  trigger_cd_pipeline:
-    needs: [build_frontend, build_backend]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Trigger CD Pipeline
-        uses: peter-evans/workflow-dispatch@v1
-        with:
-          repository: Neros5/parkndeploy
-          workflow: cd-pipeline.yml
-          ref: refs/heads/main
