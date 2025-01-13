@@ -1,4 +1,8 @@
-on: [push, workflow_dispatch]
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # Déclenche le workflow uniquement pour les tags avec le format vMAJOR.MINOR.PATCH
+  workflow_dispatch:  # Permet aussi de déclencher manuellement via l'interface de GitHub
 
 
 permissions:
