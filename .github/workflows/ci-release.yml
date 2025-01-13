@@ -1,0 +1,69 @@
+name: CI Release Pipeline
+
+
+on:
+  push:
+    tags:
+      - 'v\d.\d.\d'  # Le pipeline est déclenché pour les tags de version (par exemple v1.0.0)
+  workflow_dispatch:  # Permet de déclencher manuellement le pipeline
+
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./frontend
+
+      - name: Build the React app
+        run: npm run build
+        working-directory: ./frontend
+
+      - name: Create artifact
+        run: tar -czf react-app.tar.gz -C ./frontend/dist .
+        working-directory: ./frontend
+
+      - name: Upload frontend artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: react-app
+          path: react-app.tar.gz
+
+
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '6.0'
+
+      - name: Restore dependencies
+        run: dotnet restore
+        working-directory: ./backend
+
+      - name: Publish the .NET app
+        run: dotnet publish --configuration Release --output ./backend/publish
+        working-directory: ./backend
+
+      - name: Create artifact
+        run: tar -czf dotnet-app.tar.gz -C ./backend/publish .
+        working-directory: ./backend
+
+      - name: Upload backend artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: dotnet-app
+          path: dotnet-app.tar.gz

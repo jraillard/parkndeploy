@@ -1,12 +1,12 @@
 on:
   push:
     tags:
-      - 'v*.*.*'  # Déclenche le workflow uniquement pour les tags avec le format vMAJOR.MINOR.PATCH
+      - 'v\d.\d.\d'  # Déclenche le workflow uniquement pour les tags avec le format vMAJOR.MINOR.PATCH
   workflow_dispatch:  # Permet aussi de déclencher manuellement via l'interface de GitHub
 
 
 permissions:
-  id-token: write # Require write permission to Fetch an OIDC token (required for federated credential) and write it, it will be automatically used on actions / cli that need it
+  id-token: write  # Require write permission to Fetch an OIDC token (required for federated credential) and write it, it will be automatically used on actions / cli that need it
 
 
 env: 
@@ -60,8 +60,8 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Publish the app
-      run: dotnet publish -c Release --property:PublishDir=publish # Publish the app to the publish folder of the API project
-      working-directory: ./backend # specify where to find the solution file
+      run: dotnet publish -c Release --property:PublishDir=publish  # Publish the app to the publish folder of the API project
+      working-directory: ./backend  # specify where to find the solution file
 
     - name: Login to Azure 
       uses: azure/login@v2
@@ -73,8 +73,8 @@ jobs:
     - name: Deploy backend to App Service
       uses: azure/webapps-deploy@v2
       with: 
-        app-name: ${{ needs.deploy_infrastructure.outputs.appServiceName }} # Access to the previous job output to get the appServiceName deployed with bicep
-        package: ./backend/ParkNDeploy.Api/publish # Path to the previously published app
+        app-name: ${{ needs.deploy_infrastructure.outputs.appServiceName }}  # Access to the previous job output to get the appServiceName deployed with bicep
+        package: ./backend/ParkNDeploy.Api/publish  # Path to the previously published app
 
 
   deploy_frontend:

@@ -9,6 +9,7 @@ param swaLocation string // Static Web App locations are limited, we need to add
 param identifier string
 
 
+
 // Create the AppServicePlan through the AppServicePlan module
 module appServicePlan 'modules/appServicePlan.bicep' = {
   name: 'appServicePlan'

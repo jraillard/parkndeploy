@@ -1,0 +1,36 @@
+name: CD Pipeline
+
+
+on:
+  workflow_run:
+    workflows: ["CI Release Pipeline"]  # Le pipeline CD est déclenché après la fin du pipeline CI
+    types:
+      - completed
+
+
+jobs:
+  download_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Download frontend artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: react-app
+
+      - name: Download backend artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: dotnet-app
+
+      - name: Deploy frontend to server (example)
+        run: |
+          tar -xzf react-app.tar.gz -C /var/www/my-frontend
+          # Commandes pour déployer l'application frontend sur le serveur
+
+      - name: Deploy backend to server (example)
+        run: |
+          tar -xzf dotnet-app.tar.gz -C /var/www/my-backend
+          # Commandes pour déployer l'application backend sur le serveur
