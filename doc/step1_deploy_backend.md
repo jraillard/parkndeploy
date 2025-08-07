@@ -20,6 +20,7 @@ tenant                                  <- no need to be provisionned (but authe
         └── resourceGroup                  
             └── appServicePlan             
                 └── appService
+                    └── ** Your Wonderfull Backend **
 ```
 
 ## Create API Infrastructure
@@ -114,7 +115,7 @@ resource plan 'Microsoft.Web/serverfarms@2022-09-01' = {
 output planId string = plan.id // Export the App Service identifier
 ```
 
-Pay attention about the `name` property. Resources names should be ***strictly unique*** in Azure. As a best practice, every resource name should contain the [resource type abreviation](https://learn.microsoft.com/azure/cloud-adoption-framework/ready/azure-best-practices/resource-abbreviations). Some are placing it as prefix, some as suffix and some in middle : there's no restriction on it, it's just better to be consistent on your different projects (in order to apply rules on resources inside an organization for instance).
+Pay attention about the `name` property. ***Resources names should be strictly unique in Azure***. As a best practice, every resource name should contain the [resource type abreviation](https://learn.microsoft.com/azure/cloud-adoption-framework/ready/azure-best-practices/resource-abbreviations). Some are placing it as prefix, some as suffix and some in middle : there's no restriction on it, it's **just better to be consistent on your different projects** (in order to apply rules on resources inside an organization for instance).
 
 So for each of our resources we'll follow the following rule : projectName-resourceType-**identifier**, where identifier could be your trigram for instance (as every people in the course should have a unique resource name).
 
@@ -142,7 +143,7 @@ resource app 'Microsoft.Web/sites@2022-03-01' = {
     reserved: true
 
     siteConfig: {
-      linuxFxVersion: 'DOTNETCORE|8.0' // Specify to setup the .NET Core 8.0 runtime (used by our backend API) on the Linux machine under the hood
+      linuxFxVersion: 'DOTNETCORE|9.0' // Specify to setup the .NET Core 9.0 runtime (used by our backend API) on the Linux machine under the hood
     }
   }
 }
@@ -158,7 +159,7 @@ Pipelines in Github are created with GitHub Action tool.
 
 What a better way to understand the main concepts (workflows, events, jobs, actions) than read the official [getting started first page](https://docs.github.com/actions/about-github-actions/understanding-github-actions) ? :mag:
 
-Seems clear ? Then look at our first version of the `.github/workflows/deploy-infra-and-apps.yml` file will be using for our entire workshop : 
+Seems clear ? Then checkout the `.github/workflows/deploy-infra-and-apps.yml` file will be using for our entire workshop :
 
 ```yaml
 on: [push, workflow_dispatch]
@@ -224,13 +225,21 @@ Let's take a time to explain the syntax a bit :
 
 Now talk about actions that will be executed : 
 
-:one: Checkout the repository &rarr; Get the source code where the event was triggered on (tag, branch, repository, whatever)
+:one: Checkout the repository 
 
-:two: Login to Azure &rarr; Resources will be bound to your tenant & subscription, so we'll need to log in. The `enable-AzPSSession: true` option only allow us to open a PowerShell session in order to runs some az cli command right after
+&rarr; Get the source code where the event was triggered on (tag, branch, repository, whatever)
 
-:three: Create resource group if not exists &rarr; Name is clear but why are we doing it ? Basically bicep doesnt allow us to both create resource group and provision resources inside. It is a known limitation and therefore one solution could be to provision it but using `az cli` instead of bicep scripts
+:two: Login to Azure 
 
-:four: Deploy bicep &rarr; Finally, execute our bicep project !
+&rarr; Resources will be bound to your tenant & subscription, so we'll need to log in. The `enable-AzPSSession: true` option only allow us to open a PowerShell session in order to runs some az cli command right after
+
+:three: Create resource group if not exists 
+
+&rarr; Name is clear but why are we doing it ? Basically bicep doesnt allow us to both create resource group and provision resources inside. It is a known limitation and therefore one solution could be to provision it but using `az cli` instead of bicep scripts
+
+:four: Deploy bicep 
+
+&rarr; Finally, execute our bicep project !
 
 
 You surely notice that this workflow is using a lot a variables, let's provision it :eyes: :
@@ -240,7 +249,7 @@ You surely notice that this workflow is using a lot a variables, let's provision
 - Secrets :  
   - **AZURE_REGION** : select one of this [list](https://gist.github.com/ausfestivus/04e55c7d80229069bf3bc75870630ec8) depending on when you are (for instance **francecentral** for frenchies)
 
-  &rarr; For the next you'll need to follow the [next part](./step1_deploy_backend.md#provision-azure-identity) :clipboard:.
+  &rarr; For the following variables, you'll need to follow the [next part](./step1_deploy_backend.md#provision-azure-identity) :clipboard:.
   - **AZURE_CLIENT_ID**
   - **AZURE_SUBSCRIPTION_ID**
   - **AZURE_TENANT_ID**
@@ -249,7 +258,7 @@ You surely notice that this workflow is using a lot a variables, let's provision
 
 To deploy resources on Azure, you need to create an identity that will be allowed to do it.
 
-There are many [ways](https://learn.microsoft.com/azure/developer/github/connect-from-azure) are available, we'll use a `user-assigned manged identity` using **OpenID Connect** (OIDC) as it is the recommended way :
+There are many [ways](https://learn.microsoft.com/azure/developer/github/connect-from-azure) to do it, we'll use a `user-assigned manged identity` using **OpenID Connect** (OIDC) as it is the recommended way :
 - for PoC (proof of concept) situation &rarr; more simple to create
 - more secured than a basic secret using service principals 
 
@@ -263,7 +272,7 @@ How to do so ?
 
 :two: Copy the values for Client ID, Subscription ID, and Directory (tenant) ID to use later in your GitHub Actions workflow.
 
-&rarr; **AZURE_CLIENT_ID & AZURE_SUBSCRIPTION_ID** could be find in your **UAI** ; **AZURE_TENANT_ID** could be find by looking for "Tenant properties" in the search bar. You can add them as GitHub secrets as you did before with **AZURE_REGION**
+&rarr; **AZURE_CLIENT_ID & AZURE_SUBSCRIPTION_ID** could be find in your **UAI** ; **AZURE_TENANT_ID** could be find by looking for ***"Tenant properties"*** in the search bar. You can add them as GitHub secrets as you did before with **AZURE_REGION**
 
 :three: Assign an appropriate role to your user-assigned managed identity by going on its `Azure Role Assignement section` and using its `Add role assignment preview button`
 
@@ -273,39 +282,46 @@ How to do so ?
 
 :five: Configure a federated identity credential on a user-assigned managed identity to trust tokens issued by GitHub Actions to your GitHub repository **under your UAI / Settings / Federated credentials** tab
 
-&rarr; Here you have a lot of options to set :
+&rarr; Here you have some options to set :
 - `scenario` : GitHub Actions deploying Azure resources
 - `organisation` : your GitHub account storing your forked project
 - `repository` : your repo name
 - `entity` : environment
-- `environment` : production 
-- `name` : parkdndeploy-github-fed-cred-env-prod-yourIdentifier (the name should reflect your use case as you might need to create multiple one for the same uai)
+- `environment` : production
+- `name` : parkdndeploy-gh-fed-cred-env-prod-yourIdentifier (the name should reflect your use case as you might need to create multiple one for the same uai)
 
 :bulb: `issuer` is auto-generated and allows OIDC to recognize the caller as a GitHub action. `subject identifier` will be generated by GitHub when we'll try to connect and provision resources on Azure. Here we created a Federated Credential for when we're executing a Github Action in `production environment`.
 
 Et voilà :sparkles:
 
+> __TLDR__ : For simplicity here we basically create an **identity that is able to create anything in your whole Azure subscription**. This has been made for simplicity but keep in mind that it doesnt follow the ***least privilege principle***. In real-world use-case, you better would have create an identity in the same resource group you wanna deploy (to reduce impact zone).
+
 Let's come back to our CD pipeline now. :eyes:
 
 ## Deploy Infrastructure
 
-Before running our workflow we have two things to add.
+Before running our workflow we have two last things to add.
 
-If you understood well when we'll connect to Azure through `azure/login@v2` action, a federated credential will be fetched.
+If you understood well when we'll connect to Azure through `azure/login@v2` action and a federated credential will be fetched.
 
 This one should be used when provisionning resources (whether using bicep, az cli, terraform and so on).
 
-Also our federated credential is only valid on a GitHub job executed in production environment.
+Also our federated credential is only valid on a GitHub job executed in production environment : that's why we set `environment: production`.
 
-That being said, add the following code in your workflow : 
+That being said, add the following code in your workflow :
 
 ```yaml
-# on ...
+# on
+# ...
 
 permissions:
-  id-token: write # Require write permission to Fetch an OIDC token (required for federated credential) and write it, it will be automatically used on actions / cli that need it
+  # Require write permission to Fetch an OIDC token (required for federated credential) and write it
+  # It will be automatically used on actions / cli that needs it
+  id-token: write
 
+# env
 # ...
+
 deploy_infrastructure:
     runs-on: ubuntu-latest
     environment: production # bind the job to the production environment
@@ -315,7 +331,7 @@ Now push your work into your remoted branch (whether a feature one or main branc
 
 If you did well, everything should be green at the end :heavy_check_mark:.
 
-You can now come back to your Azure portal and look for **App Service** in the main search bar.
+You can now come back to your Azure portal and look for **"App Service"** in the main search bar.
 
 You should find yours and on the Overview page see the `Default domain` property being displayed.
 
@@ -342,8 +358,8 @@ deploy_backend:
       uses: actions/checkout@v4
     
     - name: Publish the app
-      run: dotnet publish -c Release --property:PublishDir=publish # Publish the app to the publish folder of the API project
-      working-directory: ./backend # specify where to find the solution file
+      run: dotnet publish -c Release --property:PublishDir=publish # Publish the app to the API project publish folder
+      working-directory: ./backend # Specify where to find the solution file in repository
 
     - name: Login to Azure 
       uses: azure/login@v2

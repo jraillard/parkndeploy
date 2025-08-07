@@ -16,15 +16,15 @@ Embrace the `DevOps` is in vogue; it is a proven methodology. :star:
 
 In this initiation course we will focus on :
 - `DEVELOP` : Be able to package both frontend and backend into deployable artifacts
-- `DELIVER` : Provision an Azure Infrastructure and deploy your artifacts in it to be always able to to find a parking in Angers :sparkles:
+- `DELIVER` : Provision an Azure Infrastructure and deploy your artifacts in it to be always able to find a parking in Angers :sparkles:
 
 
 ## Infrastructure as Code
 
-Infrastructure as Code or  `IaC`, means that we will be allowed to create our Infrastructure, in Azure for our case, using code.
+Infrastructure as Code or `IaC` means that we will be allowed to create our Infrastructure, in Azure for our case, using code.
 
 There's two ways of doing IaC :
-- `imperative` : you'll have to describe each steps to end with the desired infrastructure (like an algorithm)
+- `imperative` : you'll have to describe each steps to end with the desired infrastructure (think like an algorithm)
 - `declarative` : you'll have to defines the desired state and the tool you're using will be responsible of executing needed steps
 
 > :bulb: Most of the time, you'll looking for declarative instead of imperative as it is more easy to read / maintain and evolve ; but sometimes you'll not be allowed to do such a thing.
@@ -59,7 +59,7 @@ But you can also find some other third-party tools such as :
 
 Continuous Deployment, or `CD`, is a process that allow to deploy an artifact to an environment (dev, test, stating, production, etc.).
 
-***CD pipelines*** could be directly triggered at the end of a CI pipeline or you could had some `guards` such as : manual validation, tests on artifact, wait for a schedule, you could think about *almost* anything (time will brake your imagination :stuck_out_tongue:).
+***CD pipelines*** could be directly triggered at the end of a CI pipeline or you could had some `guards` such as : manual validation, tests on artifact, wait for a schedule, you could think about **almost** anything (time will brake your imagination :stuck_out_tongue:).
 
 CD pipelines are usually split into two main parts : 
 - provisionning the environment infrastructure
@@ -81,7 +81,7 @@ You could think about the following process :
 
 Et voilà ! :sparkles:
 
-> :bulb: CI/CD pipelines conception is hardly-bound to the team size, the application size and the time-to-deliver a feature : every project could have a unique one.
+> :bulb: CI/CD pipelines conception is hardly-bound to the team / application size and the time-to-deliver a feature : every project could have a unique one.
 
 ## What will we do with ParkNDeploy then ?
 
@@ -91,9 +91,9 @@ The next steps of this workshop will aim to :
 - trigger your pipelines each time you push to your remoted branches
 
 We'll use : 
-- Azure to host our infrastructure (in the cloud :cloud:)
-- GitHub Actions as CI/CD pipeline tool
-- Bicep as IaC tool (recommended one to provision Azure resources)
+- `Azure` to host our infrastructure (in the cloud :cloud:)
+- `GitHub Actions` as CI/CD pipeline tool
+- `Bicep` as IaC tool (recommended one to provision Azure resources)
 
 CI pipelines will voluntary not be covered as we want to focus on deploying : we don't need any artifact checking process or anything else as the ParkNDeploy is already written and ready to go.
 

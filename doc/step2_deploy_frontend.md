@@ -4,7 +4,7 @@
 
 In order to deploy a react application there's multiple ways of doing it :
 - Azure App Service : quite a bit expensive (CPU wise) for an SPA
-- [Azure Storage Account](https://byalexblog.net/article/react-azure-storage/) : basic storage resources allowing you to store and expose your html files (that's basically what is a SPA under the hood)
+- [Azure Storage Account](https://byalexblog.net/article/react-azure-storage/) : basic storage resources allowing you to store and expose your html files (that's basically what a SPA is under the hood)
 - Azure Static Web app : quite new resource created specially for static apps such as SPAs
 
 We will then go for this option : `Azure Static Web App`.
@@ -22,6 +22,7 @@ tenant                                  <- no need to be provisionned (but authe
             ├── appServicePlan          <- already provisionned   
             |   └── appService          <- already provisionned
             └── staticWebApp
+                └── ** Your Wonderfull Frontend **
 ```
 
 ## Create Frontend Infrastructure
@@ -86,7 +87,7 @@ We first need to add our new bicep parameter : **swaLocation**.
 
 As we did with **location**, we gonna create a `AZURE_SWA_REGION` GitHub repository secret.
 
-Today (31/10/2024), its value could be one of those : centralus, eastasia, eastus, eastus2, westeurope.
+Its value could be one of those : centralus, eastasia, eastus, eastus2, westeurope.
 
 :bulb: Take a consistent location with your resource group. :eyes:
 
@@ -106,7 +107,7 @@ Then you just have to adjust our `bicep_deploy` step to use it :
 
 Perfect ! Now just push your code and trigger the GitHub workflow. :grin:
 
-When it's finished come back to the **Azure Portal** and look for your freshly deployed Static Web App.
+When it's finished come back to the **Azure Portal** and look for your freshly deployed **"Static Web App"**.
 
 On the **Overview** page, look for the `URL` link and click on it.
 
@@ -118,7 +119,7 @@ You should face with the following page telling you that you're resource is read
 
 ## Deploy Frontend App
 
-You may know what we gonna do now right ? 
+You may know what we gonna do now right ? :eyes:
 
 We'll create another deployment job for frontend, `deploy_frontend` for instance.
 
@@ -144,6 +145,8 @@ deploy_infrastructure:
 Create the `deploy_frontend` job : 
 
 ```yaml
+# deploy-infrastructure ...
+
 deploy_frontend:
     runs-on: ubuntu-latest
     needs: deploy_infrastructure
@@ -188,15 +191,16 @@ If you search a bit to find what it is you'll understand that when you deploy an
 You then need to pass it to the `azure/static-web-apps-deploy@v1` action to be able to deploy your app.
 
 Here you have two options : 
-- Get it manually from your resource on **Azure Portal** and store it as a secret and use it in your workflow
+- Get it manually from your resource on **Azure Portal**, store it as a secret, and use it in your workflow
 - Get it automatically during your job through `az cli`, assign it in a workflow scoped variable and use it directly
 
-To be consistent with the workshop, we'll go on the automated way (also to not push your secret on the web ...) but you could try the manual way if you want. :wink:
+To be consistent with the workshop, we'll go on the automated way (also to avoid push ing your secret on the web ...) but you could try the manual way if you want. :wink:
 
 Add the following step in your `deploy_frontend` job : 
 
 ```yaml
-# Login to Azure action
+
+# Login to Azure
 # ...
 
 - name: Get Static Web App deployment token
@@ -204,7 +208,7 @@ Add the following step in your `deploy_frontend` job :
         SWA_DEPLOYMENT_TOKEN=$(az staticwebapp secrets list -n ${{ needs.deploy_infrastructure.outputs.staticWebAppName }} -o tsv --query properties.apiKey)
         echo SWA_DEPLOYMENT_TOKEN=$SWA_DEPLOYMENT_TOKEN >> $GITHUB_ENV
 
-# Deploy frontend to Static Web App action
+# Deploy frontend to Static Web App
 # ...
 ```
 

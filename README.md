@@ -1,6 +1,8 @@
 # Description
 `ParkNDeploy` is an introductory DevOps course designed to guide you through deploying a basic Parking Finder App on Azure.
 
+It follows [GitRDone](https://github.com/jraillard/gitrdone), a hands-on course to get you up to speed with version control using Git.
+
 This course covers continuous integration and continuous deployment (CI/CD) pipelines, as well as infrastructure-as-code (IaC) practices.
 
 ## Prerequisites
@@ -13,29 +15,34 @@ This course covers continuous integration and continuous deployment (CI/CD) pipe
 
 - A GitHub account in order to fork this repo and start to work :wink:
 
-- IDEs to build the app locally : 
-  - Visual Studio Community with .Net 8 SDK (Backend)
-  - Visual Studio Code & Node JS >= 21.7.1 (Frontend)
-
 - A source code management tool :
   - Git Bash for CLI guys :sunglasses:
   - [Fork](https://git-fork.com/) for GUI guys :star:
 
+- **[Optional]** IDEs to build the app locally : 
+  - Visual Studio Community with .Net 9 SDK (Backend)
+  - Visual Studio Code & Node JS >= 21.7.1 (Frontend)
+
 ### Knowledges
 
-- **[Appreciated]** Basic repository management (commits, push, merge-request)
+- **[Appreciated]** Basic repository management (commits, push, merge-request) 
 - **[Optional]** Basic understanding of APIs
 - **[Optional]** Basic understanding of SPAs
 
 ## Build the App locally
 
+[Getting the project](#getting-the-project) is mandatory.
+[Backend](#backend) and [Frontend](#frontend) build step will only be mandatory at the end of this workshop.
+
 ### Getting the project
 
 First of all, you'll need to get the source code :grin: : 
+
 - Fork this project on your personnal GitHub account 
 
-:warning: Don't select `Copy the DEFAULT branch only` option, as you will need all the branches in the repository.
-> If you never made a fork, just follow the steps mentionned [here](https://docs.github.com/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo#forking-a-repository) :eyes:.
+:warning: Keep `Copy the DEFAULT branch only` option checked (to avoid conflicts between branch names).
+
+> If you never made a fork, just follow the steps mentionned [here](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo#forking-a-repository) :eyes:.
 
 - Clone the project on your local machine
 
@@ -43,10 +50,11 @@ First of all, you'll need to get the source code :grin: :
 
 - And that's it ! :sparkles: 
 
-:bulb: The repository will contain branches : 
-- `main` : this will be you're starting point
-- `solution` : on this branch you'll will be able to see answers, step by step, to compare with your code if you need to
-- and also... `your_branches` : you have the choice of commiting / pushing everything on main branch or use specific branches (we call that [feature branches](https://learn.microsoft.com/azure/devops/repos/git/git-branching-guidance?view=azure-devops#use-feature-branches-for-your-work)) for each steps :smirk: 
+> :bulb: The repository will contain the `main` branch as you're starting point. 
+> You're free to use `feature branches` or not. 
+> 
+> If for some reasons you're blocked during this workshop, you can check 
+> `solution-<currentYear>` branches on the main repository.:smirk: 
 
 ### Backend
 ---

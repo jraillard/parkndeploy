@@ -1,6 +1,6 @@
 # Step 4 : Further improvements
 
-Below you'll find some improvements suggestions to our project.
+Below you'll find some suggestions to improve our project.
 
 Those will be splited in two types : functionnalities, refactorings.
 
@@ -8,7 +8,7 @@ As its name implies, it would be better to implement functionnalities before thi
 
 Stars number will indicate the difficulty.
 
-Every suggested improvements will be followed with clue to achieve it (if needed).
+Every suggested improvements will be followed with clue(s) to achieve it.
 
 ## New functionnalities
 
@@ -32,7 +32,7 @@ Every suggested improvements will be followed with clue to achieve it (if needed
 - For Backend app :
   - [build the dotnet app in release mode](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-build)
 
-&rarr; This aim to have a minimal check when someone is making a merge request on your repository before reviewing the code and merge it :wink:
+&rarr; This aim to have a minimal check (the solution compiles) when someone is making a merge request on your repository before reviewing the code and merge it :wink:
 
 :star::star: Create the CI Pipeline for releases and connect it to our CD Pipeline
 

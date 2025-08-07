@@ -2,7 +2,7 @@
 
 `ParkNDeploy Backend` is a dotnet solution responsible to deliver the API capabilities.
 
-It is containing only one project : `ParkNDeploy.API`, a [dotnet 8 minimal API](https://learn.microsoft.com/aspnet/core/fundamentals/minimal-apis/overview?view=aspnetcore-8.0).
+It is containing only one project : `ParkNDeploy.API`, a [dotnet 9 minimal API](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/overview?view=aspnetcore-9.0).
 
 ## Features 
 

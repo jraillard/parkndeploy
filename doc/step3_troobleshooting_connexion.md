@@ -24,7 +24,9 @@ Of course Static Web App could be linked to multiple backend with differents [ty
 
 In order to link our Azure App Service instance, we'll need the **Standard** sku (which is not free :smirk:).
 
-> **Notes** : Some [constraints](https://learn.microsoft.com/azure/static-web-apps/apis-overview#constraints) have to be keep in mind, especially having a `/api` basePath on your API, that's why it's mentionned in the [backend readme file](../backend/README.md).
+> **Notes** : Some [constraints](https://learn.microsoft.com/azure/static-web-apps/apis-overview#constraints) have to be keep in mind : 
+> - need to have a `/api` basePath on your API, that's why it's mentionned in the [backend readme file](../backend/README.md).
+> - backend will, by default, no longer be accessible elsewhere than our Static Web App
 
 ## Frontend Infrastructure update
 
