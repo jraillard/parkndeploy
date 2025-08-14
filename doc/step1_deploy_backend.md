@@ -266,7 +266,8 @@ How to do so ?
 
 :one: Create a user-assigned managed identity following this [doc](https://learn.microsoft.com/entra/identity/managed-identities-azure-resources/how-manage-user-assigned-managed-identities?pivots=identity-mi-methods-azp#create-a-user-assigned-managed-identity)
 
-&rarr; For the resource group name, name it as : rg-uai-**yourIdentifier** 
+&rarr; For the resource group name, name it as : rg-uai-**yourIdentifier**
+&rarr; for the uai itself name it : uai-parkndeploy-production-**yourIdentifier**
 
 :bulb: **rg** for resource group and **uai** for user assigned identity
 
