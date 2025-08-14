@@ -145,7 +145,7 @@ deploy_infrastructure:
 Create the `deploy_frontend` job : 
 
 ```yaml
-# deploy-infrastructure ...
+# deploy_infrastructure ...
 
 deploy_frontend:
     runs-on: ubuntu-latest
