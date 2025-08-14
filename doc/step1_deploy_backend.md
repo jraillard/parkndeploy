@@ -165,7 +165,7 @@ Seems clear ? Then checkout the `.github/workflows/deploy-infra-and-apps.yml` fi
 on: [push, workflow_dispatch]
 
 env: 
-  AZURE_RG_NAME: ${{ vars.PROJECT_NAME }}-rg-${{ vars.AZURE_RESOURCE_IDENTIFIER }}
+  AZURE_RG_NAME: rg-${{ vars.PROJECT_NAME }}-${{ vars.AZURE_RESOURCE_IDENTIFIER }}
   
 jobs:
   deploy_infrastructure:
