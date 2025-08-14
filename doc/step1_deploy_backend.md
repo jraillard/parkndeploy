@@ -418,7 +418,7 @@ This is quite normal : it is a pure API that not exposing any endpoint on the ro
 
 For those who read the [backend readme file](../backend/README.md), you know that our API is exposing a Swagger UI right ? :smirk:
 
-Add `/api/swagger` to the url and you should see something like this :
+Add `/swagger` to the url and you should see something like this :
 
 ![backend swagger](./assets/backend_swagger.png)
 
