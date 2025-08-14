@@ -16,7 +16,7 @@ resource app 'Microsoft.Web/sites@2022-03-01' = {
     reserved: true
 
     siteConfig: {
-      linuxFxVersion: 'DOTNETCORE|9.0' // Specify to setup the .NET Core 8.0 runtime on the linux under the hood
+      linuxFxVersion: 'DOTNETCORE|9.0' // Specify to setup the .NET Core 9.0 runtime on the linux under the hood
     }
   }
 }
