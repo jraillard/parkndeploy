@@ -73,8 +73,8 @@ Every suggested improvements will be followed with clue(s) to achieve it.
 &rarr; A tag should trigger CI workflow and this workflow should trigger CD workflow if it pass
 
 :bulb: Test the two possibilities and analyze pros and cons :
-- workflow_dispatch 
-- workflow_run (:warning: like workflow_dispatch, it will not work if your workflows aren't on default branch)
+- workflow_run
+- workflow_call
 
 When you're done, compare your finds with this [article](https://jiminbyun.medium.com/github-actions-workflow-run-vs-workflow-call-3f1a5c6e19d4). :eyes:
 
