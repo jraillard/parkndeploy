@@ -6,9 +6,6 @@ on:
     tags:
       - '[0-9]+.[0-9]+.[0-9]+' # means every tags that follows basic semantic version (MAJOR.MINOR.PATCH) will trigger the pipeline
 
-permissions:
-  id-token: write # Require write permission to Fetch an OIDC token (required for federated credential)
-
 env: 
   AZURE_RG_NAME: rg-${{ vars.PROJECT_NAME }}-${{ vars.AZURE_RESOURCE_IDENTIFIER }}
   
@@ -110,6 +107,8 @@ jobs:
     needs: [build_backend_artifact, build_frontend_artifact] # later replaced by CI workflow call ...
     runs-on: ubuntu-latest
     environment: production # This is mandatory to get the federated credential (bind to production environment)
+    permissions:
+      id-token: write # Require write permission to Fetch an OIDC token (required for federated credential)
 
     # Expose job outputs to be used in the next jobs
     outputs:
@@ -138,6 +137,7 @@ jobs:
       id: bicep_deploy
       uses: azure/arm-deploy@v2
       with:
+        scope: resourcegroup
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         region: ${{ secrets.AZURE_REGION }}
         template: ./infrastructure/main.bicep
@@ -148,6 +148,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: deploy_infrastructure
     environment: production
+    permissions:
+      id-token: write # Require write permission to Fetch an OIDC token (required for federated credential)
 
     steps:      
     - name: Download the backend artifact
@@ -172,7 +174,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: deploy_infrastructure
     environment: production
-
+    permissions:
+      id-token: write # Require write permission to Fetch an OIDC token (required for federated credential)
+      
     steps:
     - name: Download the frontend artifact
       uses: actions/download-artifact@v4
