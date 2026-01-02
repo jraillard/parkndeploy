@@ -4,7 +4,7 @@ param project string
 // Here we'll use add an identifier to create a unique name for the App Service Plan, for example your trigram, so that everyone could deploy his own parkndeploy instance
 param identifier string
 
-resource swa 'Microsoft.Web/staticSites@2022-09-01' = {
+resource swa 'Microsoft.Web/staticSites@2024-04-01' = {
   name: '${project}-swa-${identifier}'
   location: location
   
