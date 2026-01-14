@@ -1,5 +1,11 @@
 on: [push, workflow_dispatch]
 
+
+permissions:
+  # Require write permission to Fetch an OIDC token (required for federated credential) and write it
+  # It will be automatically used on actions / cli that needs it
+  id-token: write
+
 env: 
   AZURE_RG_NAME: rg-${{ vars.PROJECT_NAME }}-${{ vars.AZURE_RESOURCE_IDENTIFIER }}
   
@@ -33,3 +39,7 @@ jobs:
         template: ./infrastructure/main.bicep
         parameters: project=${{ vars.PROJECT_NAME }} location=${{ secrets.AZURE_REGION }} identifier=${{ vars.AZURE_RESOURCE_IDENTIFIER }}
         resourceGroupName: ${{ env.AZURE_RG_NAME }}
+
+deploy_infrastructure:
+    runs-on: ubuntu-latest
+    environment: production # bind the job to the production environment
