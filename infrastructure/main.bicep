@@ -36,7 +36,7 @@ module staticWebApp 'modules/staticWebApp.bicep' = {
     identifier: identifier
   }
 }
-module staticWebAppBackend 'modules/staticWebAppBackend.bicep' = {
+module staticWebAppBackend 'modules/staticWebAppBackEnd.bicep' = {
   name: 'staticWebAppBackend'
   params: {
     backendBindedResourceId: appService.outputs.appServiceId
