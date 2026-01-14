@@ -11,6 +11,7 @@ env:
 jobs:
   deploy_infrastructure:
     runs-on: ubuntu-latest
+    environment: production # bind the job to the production environment
 
     steps:
     - name: Checkout repository
@@ -39,6 +40,3 @@ jobs:
         parameters: project=${{ vars.PROJECT_NAME }} location=${{ secrets.AZURE_REGION }} identifier=${{ vars.AZURE_RESOURCE_IDENTIFIER }}
         resourceGroupName: ${{ env.AZURE_RG_NAME }}
       
-  deploy_infrastructure:
-    runs-on: ubuntu-latest
-    environment: production # bind the job to the production environment
