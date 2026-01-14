@@ -40,7 +40,7 @@ jobs:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         region: ${{ secrets.AZURE_REGION }}
         template: ./infrastructure/main.bicep
-        parameters: project=${{ vars.PROJECT_NAME }} location=${{ secrets.AZURE_REGION }} identifier=${{ vars.AZURE_RESOURCE_IDENTIFIER }}
+        parameters: project=${{ vars.PROJECT_NAME }} location=${{ secrets.AZURE_REGION }} swaLocation=${{ secrets.AZURE_SWA_REGION }} identifier=${{ vars.AZURE_RESOURCE_IDENTIFIER }}
         resourceGroupName: ${{ env.AZURE_RG_NAME }}
 
   deploy_backend:
