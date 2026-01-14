@@ -40,6 +40,7 @@ jobs:
         SWA_DEPLOYMENT_TOKEN=$(az staticwebapp secrets list -n ${{ needs.deploy_infrastructure.outputs.staticWebAppName }} -o tsv --query properties.apiKey)
         echo SWA_DEPLOYMENT_TOKEN=$SWA_DEPLOYMENT_TOKEN >> $GITHUB_ENV
 
+
     - name: Create resource group if not exists      
       run: |
         az group show --name ${{ env.AZURE_RG_NAME }} ||
