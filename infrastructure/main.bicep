@@ -36,7 +36,14 @@ module staticWebApp 'modules/staticWebApp.bicep' = {
     identifier: identifier
   }
 }
-
+module staticWebAppBackend 'modules/staticWebAppBackend.bicep' = {
+  name: 'staticWebAppBackend'
+  params: {
+    backendBindedResourceId: appService.outputs.appServiceId
+    swaName: staticWebApp.outputs.swaName
+    location: location
+  }
+}
 // Export App Service Name
 
 output appServiceName string = appService.outputs.appServiceName // Export AppServiceName in order to deploy the API later on
