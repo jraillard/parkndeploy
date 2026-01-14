@@ -6,11 +6,14 @@ resource swa 'Microsoft.Web/staticSites@2024-04-01' = {
   name: '${project}-swa-${identifier}'
   location: location
   
-  sku: {
-    name: 'Free'
-  }  
+sku: {   
+    name: 'Standard'
+    tier: 'Standard'
+} 
 
   properties: {} // Even empty, it's mandatory ...
 }
+
+
 
 output swaName string = swa.name // Expose Static Web App name as we did for App Service for deployment purpose
