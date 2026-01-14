@@ -17,6 +17,8 @@ jobs:
   deploy_infrastructure:
     runs-on: ubuntu-latest
     environment: production # bind the job to the production environment
+    outputs:
+      appServiceName: ${{ steps.bicep_deploy.outputs.appServiceName }}
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
