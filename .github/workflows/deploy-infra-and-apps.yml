@@ -36,7 +36,7 @@ jobs:
       id: bicep_deploy
       uses: azure/arm-deploy@v2
       with:
-        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         region: ${{ secrets.AZURE_REGION }}
         template: ./infrastructure/main.bicep
         parameters: project=${{ vars.PROJECT_NAME }} location=${{ secrets.AZURE_REGION }} identifier=${{ vars.AZURE_RESOURCE_IDENTIFIER }}
