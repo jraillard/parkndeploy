@@ -78,7 +78,7 @@ jobs:
         package: ./backend/ParkNDeploy.Api/publish # Path to the previously published app
   # deploy_infrastructure ...
 
-deploy_frontend:
+  deploy_frontend:
     runs-on: ubuntu-latest
     needs: deploy_infrastructure
     environment: production
