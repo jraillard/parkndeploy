@@ -3,7 +3,7 @@ targetScope = 'resourceGroup' // We'll deploy the resources in the provided reso
 // Parameters to easily construct resource names
 param location string
 param project string
-
+param swaLocation string // Static Web App locations are limited, we need to add another variable
 // Here we'll add an identifier to create a unique name for the App Service Plan, for example your trigram, so that everyone could deploy his own parkndeploy instance
 param identifier string
 
@@ -28,5 +28,16 @@ module appService 'modules/appService.bicep' = {
   }
 }
 
+module staticWebApp 'modules/staticWebApp.bicep' = {
+  name: 'staticWebApp'
+  params: {
+    location: swaLocation
+    project: project
+    identifier: identifier
+  }
+}
+
 // Export App Service Name
-output appServiceName string = appService.outputs.appServiceName
+
+output appServiceName string = appService.outputs.appServiceName // Export AppServiceName in order to deploy the API later on
+output staticWebAppName string = staticWebApp.outputs.swaName // Export StaticWebAppName in order to deploy the Frontend late
