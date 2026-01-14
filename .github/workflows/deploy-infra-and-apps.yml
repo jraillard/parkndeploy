@@ -15,6 +15,7 @@ jobs:
 
     outputs: 
       appServiceName: ${{ steps.bicep_deploy.outputs.appServiceName }}
+      staticWebAppName: ${{ steps.bicep_deploy.outputs.staticWebAppName }}
 
     steps:
     - name: Checkout repository
@@ -73,4 +74,31 @@ jobs:
       with: 
         app-name: ${{ needs.deploy_infrastructure.outputs.appServiceName }} # Access to the previous job output to get the appServiceName deployed with bicep
         package: ./backend/ParkNDeploy.Api/publish # Path to the previously published app
+        
+  deploy_frontend:
+    runs-on: ubuntu-latest
+    needs: deploy_infrastructure
+    environment: production
 
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Build the app
+      run: npm install && npm run build
+      working-directory: ./frontend    
+
+    - name: Login to Azure 
+      uses: azure/login@v2
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }} 
+  
+    - name: Deploy frontend to Static Web App
+      uses: azure/static-web-apps-deploy@v1
+      with:
+        app_location: frontend/dist
+        action: upload
+        skip_app_build: true
+        skip_api_build: true
