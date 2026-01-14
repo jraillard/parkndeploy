@@ -9,3 +9,4 @@ resource staticWebAppBackend 'Microsoft.Web/staticSites/linkedBackends@2022-03-0
     region: location
   }
 }
+
