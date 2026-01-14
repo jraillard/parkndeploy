@@ -21,7 +21,7 @@ jobs:
     # Exposer le nom de l'App Service pour le job backend
     outputs:
       appServiceName: ${{ steps.bicep_deploy.outputs.appServiceName }}
-      staticWebAppName: ${{ steps.bicep_deploy.outputs.swaName }}
+      staticWebAppName: ${{ steps.bicep_deploy.outputs.staticWebAppName }}
 
     steps:
       - name: Checkout repository
@@ -37,7 +37,7 @@ jobs:
 
       - name: Get Static Web App deployment token
         run: |      
-          SWA_DEPLOYMENT_TOKEN=$(az staticwebapp secrets list -n ${{ needs.deploy_infrastructure.outputs.swaName }} -o tsv --query properties.apiKey)
+          SWA_DEPLOYMENT_TOKEN=$(az staticwebapp secrets list -n ${{ needs.deploy_infrastructure.outputs.staticWebAppName }} -o tsv --query properties.apiKey)
           echo SWA_DEPLOYMENT_TOKEN=$SWA_DEPLOYMENT_TOKEN >> $GITHUB_ENV
 
       - name: Create resource group if not exists      
@@ -115,6 +115,7 @@ jobs:
       - name: Deploy frontend to Static Web App
         uses: azure/static-web-apps-deploy@v1
         with:
+          azure_static_web_apps_api_token: ${{ env.SWA_DEPLOYMENT_TOKEN }}
           app_location: frontend/dist
           action: upload
           skip_app_build: true
