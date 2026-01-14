@@ -42,5 +42,4 @@ module staticWebApp 'modules/staticWebApp.bicep' = {
 }
 // Export App Service Name
 output appServiceName string = appService.outputs.appServiceName
-output appServiceName string = appService.outputs.appServiceName // Export AppServiceName in order to deploy the API later on
 output staticWebAppName string = staticWebApp.outputs.swaName // Export StaticWebAppName in order to deploy the Frontend late
