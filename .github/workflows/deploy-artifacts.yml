@@ -1,10 +1,6 @@
 name: Deploy Artifacts
 
 on:
-  # Trigger on RC tags to deploy to dev environment
-  push:
-    tags:
-      - '[0-9]+.[0-9]+.[0-9]+-rc-[0-9][0-9][0-9][0-9]' # X.Y.Z-rc-NNNN pattern
   # Trigger the CD workflow (deploy-artifacts) on the completion of the CI workflow (build-artifacts)
   workflow_call:
     inputs:
@@ -50,10 +46,7 @@ jobs:
     - name: Determine target environment
       id: set_env
       run: |
-        if [[ "${{ github.event_name }}" == "push" ]]; then
-          # RC tag → dev environment
-          echo "environment=dev" >> $GITHUB_OUTPUT
-        elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+        if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
           # Manual trigger → use selected environment
           echo "environment=${{ inputs.environment }}" >> $GITHUB_OUTPUT
         else
