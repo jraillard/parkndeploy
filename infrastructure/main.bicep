@@ -7,6 +7,15 @@ param project string
 param identifier string
 param swaLocation string
 
+// Create Application Insights for monitoring
+module appInsights 'modules/appInsights.bicep' = {
+  name: 'appInsights'
+  params: {
+    location: location
+    project: project
+    identifier: identifier
+  }
+}
 
 // Create the AppServicePlan (AppService Wrapper in Azure)
 module appServicePlan 'modules/appServicePlan.bicep' = {
@@ -26,6 +35,8 @@ module appService 'modules/appService.bicep' = {
     project: project
     identifier: identifier
     planId: appServicePlan.outputs.planId
+    appInsightsConnectionString: appInsights.outputs.appInsightsConnectionString
+    appInsightsInstrumentationKey: appInsights.outputs.appInsightsInstrumentationKey
   }
 }
 
@@ -52,3 +63,4 @@ module staticWebAppBackend 'modules/staticWebAppBackend.bicep' = {
 output appServiceName string = appService.outputs.appServiceName // Export AppServiceName in order to deploy the API later on
 output appServiceUrl string = appService.outputs.appServiceUrl // Export AppServiceUrl in order to deploy the Frontend later on
 output staticWebAppName string = staticWebApp.outputs.swaName // Export StaticWebAppName in order to deploy the Frontend later on
+output appInsightsName string = appInsights.outputs.appInsightsName // Export App Insights name for monitoring

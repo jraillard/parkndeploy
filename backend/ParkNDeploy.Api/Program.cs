@@ -5,6 +5,9 @@ using ParkNDeploy.Api.Services;
 // Create the dependecy injection container
 var builder = WebApplication.CreateBuilder(args);
 
+// Add Application Insights telemetry
+builder.Services.AddApplicationInsightsTelemetry();
+
 // Add OpenAPI document & Swagger capabilities
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

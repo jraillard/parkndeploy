@@ -6,6 +6,8 @@ param identifier string
 
 // Here you should pass the planId from the appServicePlan module
 param planId string
+param appInsightsConnectionString string
+param appInsightsInstrumentationKey string
 
 resource app 'Microsoft.Web/sites@2022-03-01' = {
   name: '${project}-app-${identifier}'
@@ -17,6 +19,20 @@ resource app 'Microsoft.Web/sites@2022-03-01' = {
 
     siteConfig: {
       linuxFxVersion: 'DOTNETCORE|9.0' // Specify to setup the .NET Core 9.0 runtime on the linux under the hood
+      appSettings: [
+        {
+          name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
+          value: appInsightsConnectionString
+        }
+        {
+          name: 'ApplicationInsightsAgent_EXTENSION_VERSION'
+          value: '~3'
+        }
+        {
+          name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
+          value: appInsightsInstrumentationKey
+        }
+      ]
     }
   }
 }
