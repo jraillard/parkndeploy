@@ -1,8 +1,17 @@
 name: Deploy Artifacts
 
-# Trigger the CD workflow (deploy-artifacts) on the completion of the CI workflow (build-artifacts)
 on:  
+  # Trigger the CD workflow (deploy-artifacts) on the completion of the CI workflow (build-artifacts)
   workflow_call:
+  # Trigger the CD workflow manually from GitHub UI
+  # Run_id from previous CI available at GH / Actions/ Workflow Run / Id as last part of the URL 
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: 'Workflow Run ID containing the artifacts from a previous CI to deploy'
+        required: true
+        type: string
+      
 env: 
   AZURE_RG_NAME: rg-${{ vars.PROJECT_NAME }}-${{ vars.AZURE_RESOURCE_IDENTIFIER }}
   
@@ -59,6 +68,8 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: backend-artifact
+        run-id: ${{ inputs.run_id || github.run_id }}
+        github-token: ${{ secrets.GITHUB_TOKEN }}
     
     - name: Login to Azure 
       uses: azure/login@v2
@@ -85,6 +96,8 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: frontend-artifact
+        run-id: ${{ inputs.run_id || github.run_id }}
+        github-token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Login to Azure 
       uses: azure/login@v2
