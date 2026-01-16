@@ -88,6 +88,8 @@ When you're done, compare your finds with this [article](https://jiminbyun.mediu
 - production environment (actual behavior)
 - dev environment
 
+If all workflow is trigger by a tag &rarr; it should match the following pattern : X.Y.Z-rc-XXXX (where X, Y, Z are all single digit)
+
 &rarr; Solution should keep all previous features
 
 &rarr; Don't forget secrets and azure things ... :eyes:
