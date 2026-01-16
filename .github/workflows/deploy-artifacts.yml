@@ -4,12 +4,20 @@ on:
   # Trigger the CD workflow (deploy-artifacts) on the completion of the CI workflow (build-artifacts)
   workflow_call:
   # Trigger the CD workflow manually from GitHub UI
-  # Run_id from previous CI available at GH / Actions/ Workflow Run / Id as last part of the URL 
+  # Run_id from previous CI available at GH / Actions/ Workflow Run / Id as part of the URL (after "/runs/") 
   workflow_dispatch:
     inputs:
       run_id:
-        description: 'Workflow Run ID containing the artifacts from a previous CI to deploy'
-        required: true
+        description: 'Workflow Run ID containing the artifacts from a previous run to deploy'
+        required: false
+        type: string
+      backend_artifact_id:
+        description: 'Backend artifact ID (alternative to run_id)'
+        required: false
+        type: string
+      frontend_artifact_id:
+        description: 'Frontend artifact ID (alternative to run_id)'
+        required: false
         type: string
       
 env: 
@@ -63,13 +71,23 @@ jobs:
     permissions:
       id-token: write # Require write permission to Fetch an OIDC token (required for federated credential)
 
-    steps:      
-    - name: Download the backend artifact
+    steps:
+    - name: Download the backend artifact (by run_id)
+      if: inputs.backend_artifact_id == ''
       uses: actions/download-artifact@v4
       with:
         name: backend-artifact
         run-id: ${{ inputs.run_id || github.run_id }}
         github-token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Download the backend artifact (by artifact_id)
+      if: inputs.backend_artifact_id != ''
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        gh api /repos/${{ github.repository }}/actions/artifacts/${{ inputs.backend_artifact_id }}/zip > backend-artifact.zip
+        unzip -q backend-artifact.zip
+        rm backend-artifact.zip
     
     - name: Login to Azure 
       uses: azure/login@v2
@@ -92,12 +110,22 @@ jobs:
       id-token: write # Require write permission to Fetch an OIDC token (required for federated credential)
       
     steps:
-    - name: Download the frontend artifact
+    - name: Download the frontend artifact (by run_id)
+      if: inputs.frontend_artifact_id == ''
       uses: actions/download-artifact@v4
       with:
         name: frontend-artifact
         run-id: ${{ inputs.run_id || github.run_id }}
         github-token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Download the frontend artifact (by artifact_id)
+      if: inputs.frontend_artifact_id != ''
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        gh api /repos/${{ github.repository }}/actions/artifacts/${{ inputs.frontend_artifact_id }}/zip > frontend-artifact.zip
+        unzip -q frontend-artifact.zip
+        rm frontend-artifact.zip
 
     - name: Login to Azure 
       uses: azure/login@v2
