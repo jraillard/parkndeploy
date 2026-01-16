@@ -81,3 +81,13 @@ When you're done, compare your finds with this [article](https://jiminbyun.mediu
 :star::star::star: Allow developer team to trigger the CD pipeline manually by specifying whether an artifact or a previous CI run_id.
 
 &rarr; Remember that workflow_dispatch will only works if youre workflows are on default branch or if you're using GitHub CLI to trigger it.
+
+## Next Level
+
+:star::star::star::star::star: Allow developper team to deploy whether on :
+- production environment (actual behavior)
+- dev environment
+
+&rarr; Solution should keep all previous features
+
+&rarr; Don't forget secrets and azure things ... :eyes:
