@@ -1,0 +1,32 @@
+name: CI Check - Merge Request
+
+# On ne le lance QUE sur les Merge Requests
+on:
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  # Étape Frontend : on reprend tes commandes 'npm'
+  check_frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build & Lint Frontend
+        run: |
+          npm install
+          npm run lint
+          npm run build
+        working-directory: ./frontend
+
+  # Étape Backend : on reprend ton 'dotnet publish' (qui inclut le build)
+  check_backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+      - name: Build Backend Release
+        run: dotnet build -c Release
+        working-directory: ./backend
