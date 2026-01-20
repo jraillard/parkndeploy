@@ -1,0 +1,47 @@
+on: [pull_request, workflow_dispatch]
+
+permissions:
+  # Require write permission to Fetch an OIDC token (required for federated credential) and write it
+  # It will be automatically used on actions / cli that needs it
+  id-token: write
+
+  
+jobs:
+  deploy_infrastructure:
+    runs-on: ubuntu-latest
+    environment: production
+
+  deploy_backend:
+    runs-on: ubuntu-latest
+    environment: production
+    needs: deploy_infrastructure
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Setup .NET SDK 9.0.x
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+        
+    - name: Publish the app
+      run: dotnet publish -c Release --property:PublishDir=publish # Publish the app to the API project publish folder
+      working-directory: ./backend # Specify where to find the solution file in repository
+    
+  deploy_frontend:
+    runs-on: ubuntu-latest
+    needs: deploy_infrastructure
+    environment: production
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Build the app
+      run: npm install && npm run build
+      working-directory: ./frontend    
+
+    - name: Build the lint
+      run: run lint
+      working-directory: ./frontend  
