@@ -1,4 +1,4 @@
-on: [v*, workflow_dispatch]
+on: [push, workflow_dispatch]
 
 permissions:
   # Require write permission to Fetch an OIDC token (required for federated credential) and write it
