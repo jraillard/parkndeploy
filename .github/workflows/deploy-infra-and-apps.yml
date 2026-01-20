@@ -14,6 +14,7 @@ jobs:
 
     outputs:
       appServiceName: ${{ steps.bicep_deploy.outputs.appServiceName }}
+      staticWebAppName: ${{ steps.bicep_deploy.outputs.staticWebAppName }}
       
     steps:
     - name: Checkout repository
@@ -97,10 +98,16 @@ jobs:
         client-id: ${{ secrets.AZURE_CLIENT_ID }}
         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }} 
+
+    - name: Get Static Web App deployment token
+      run: |      
+        SWA_DEPLOYMENT_TOKEN=$(az staticwebapp secrets list -n ${{ needs.deploy_infrastructure.outputs.staticWebAppName }} -o tsv --query properties.apiKey)
+        echo SWA_DEPLOYMENT_TOKEN=$SWA_DEPLOYMENT_TOKEN >> $GITHUB_ENV
   
     - name: Deploy frontend to Static Web App
       uses: azure/static-web-apps-deploy@v1
       with:
+        azure_static_web_apps_api_token: ${{ env.SWA_DEPLOYMENT_TOKEN }}
         app_location: frontend/dist
         action: upload
         skip_app_build: true
