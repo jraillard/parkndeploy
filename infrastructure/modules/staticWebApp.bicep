@@ -7,8 +7,8 @@ resource swa 'Microsoft.Web/staticSites@2024-04-01' = {
   location: location
   
   sku: {
-    name: 'Standard'
-    tier: 'Standard'
+    name: 'Free'
+    tier: 'Free'
   }  
 
   properties: {} // Even empty, it's mandatory ...
