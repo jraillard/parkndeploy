@@ -52,19 +52,22 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v4
+        uses: azure/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
 
       - name: Publish Backend
-        run: dotnet publish -c Release --property:PublishDir=publish
+        # On définit explicitement un dossier de sortie nommé "myapp"
+        run: dotnet publish -c Release -o ./myapp
         working-directory: ./backend
 
       - name: Upload Backend Artifact
         uses: actions/upload-artifact@v4
         with:
           name: backend-publish
-          path: ./backend/publish
+          # Le chemin est relatif à la racine du repo, 
+          # donc : dossier_working_dir / dossier_output
+          path: ./backend/myapp
 
   # --------------------------
   # CD : Déployer l'infrastructure
