@@ -9,7 +9,7 @@ jobs:
         - name: Checkout repository
           uses: actions/checkout@v4
 
-        - name: Build the react app
+        - name: Build the react app - production mode
           run: npm install && npm run build
           working-directory: ./frontend
 
