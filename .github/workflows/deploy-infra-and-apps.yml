@@ -55,7 +55,7 @@ jobs:
           dotnet-version: '9.0.x'
           
       - name: Publish the app
-        run: dotnet publish -c Release -o publish # Publish the app to the API project publish folder
+        run: dotnet publish -c Release --property:PublishDir=publish # Publish the app to the API project publish folder
         working-directory: ./backend # Specify where to find the solution file in repository
 
       - name: Login to Azure 
