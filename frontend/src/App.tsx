@@ -8,6 +8,7 @@ import { LoadingSpinner } from "@/components/ui/loadingspinner";
 import ParkingListFilters from "@/components/ParkingList/ParkingListFilters";
 import { useParkingSearchStore } from "@/stores/parkingSearchStore";
 
+const APP_VERSION = import.meta.env.VITE_APP_VERSION || 'local-dev';
 function App() {
   const { parkingName } = useParkingSearchStore();
 
@@ -31,6 +32,11 @@ function App() {
       {isPending && <LoadingSpinner className="mr-2 h-4 w-4 animate-spin" />}
       {isError && <span>Something went wrong with the backend ...</span>}
       {data && <ParkingList parkings={data.parkings} />}
+    </div>
+    
+    <div className="fixed bottom-2 right-2 text-[10px] text-gray-400 font-mono italic">
+        release: {APP_VERSION}
+      </div>
     </div>
   );
 }
