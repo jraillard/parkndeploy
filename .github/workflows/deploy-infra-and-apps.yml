@@ -74,6 +74,12 @@ jobs:
         app-name: ${{ needs.deploy_infrastructure.outputs.appServiceName }} # Access to the previous job output to get the appServiceName deployed with bicep
         package: ./backend/ParkNDeploy.Api/publish # Path to the previously published app
 
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: build
+        projects: '**/*.csproj'
+        arguments: '--configuration Release'
+
   deploy_frontend:
     runs-on: ubuntu-latest
     needs: deploy_infrastructure
@@ -107,3 +113,13 @@ jobs:
         action: upload
         skip_app_build: true
         skip_api_build: true 
+    
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '18.x'
+
+    - script: |
+        npm install
+        npm run build
+        npm run lint
+      displayName: Build & lint frontend
