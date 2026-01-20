@@ -24,7 +24,7 @@ jobs:
           working-directory: ./frontend
 
         - name: Run ESLint
-          run: npx eslint .
+          run: npm run lint
           working-directory: ./frontend
 
 
@@ -37,7 +37,7 @@ jobs:
         - name: Set up .NET
           uses: actions/setup-dotnet@v2
           with:
-            dotnet-version: '6.0.x'
+            dotnet-version: '9.0.x'
 
         - name: Build backend
           run: dotnet build
