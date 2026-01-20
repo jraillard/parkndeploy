@@ -1,4 +1,4 @@
-targetScope = 'resourceGroup' // We'll deploy the resources in the provided resource group
+targetScope = 'resourceGroup' // We'll deploy the resources in the provided resource g
 
 // Parameters to easily construct resource names
 param location string
