@@ -1,40 +1,43 @@
-trigger: none
+name: CI - Merge Requests
 
-pr:
-  branches:
-    include:
-      - main
-      
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
 
-stages:
-- stage: CI_Merge_Request
-  displayName: CI for Merge Requests
-  jobs:
+jobs:
+  frontend_ci:
+    name: Frontend - Build & Lint
+    runs-on: ubuntu-latest
 
-  - job: Frontend_CI
-    displayName: Frontend - Build & Lint
-    pool:
-      vmImage: ubuntu-latest
     steps:
-      - task: NodeTool@0
-        inputs:
-          versionSpec: '18.x'
+      - uses: actions/checkout@v4
 
-      - script: |
-          npm install
-          npm run build
-          npm run lint
-        workingDirectory: frontend
-        displayName: Build and lint React app
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
 
-  - job: Backend_CI
-    displayName: Backend - Build Release
-    pool:
-      vmImage: ubuntu-latest
+      - working-directory: ./frontend
+        run: npm install
+
+      - working-directory: ./frontend
+        run: npm run build
+
+      - working-directory: ./frontend
+        run: npm run lint
+
+  backend_ci:
+    name: Backend - Build (Release)
+    runs-on: ubuntu-latest
+
     steps:
-      - task: DotNetCoreCLI@2
-        displayName: Build .NET app (Release)
-        inputs:
-          command: build
-          projects: backend/**/*.csproj
-          arguments: '--configuration Release'
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - working-directory: ./backend
+        run: dotnet restore
+
+      - working-directory: ./backend
+        run: dotnet build --configuration Release --no-restore
