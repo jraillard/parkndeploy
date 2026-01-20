@@ -32,12 +32,12 @@ function App() {
       {isPending && <LoadingSpinner className="mr-2 h-4 w-4 animate-spin" />}
       {isError && <span>Something went wrong with the backend ...</span>}
       {data && <ParkingList parkings={data.parkings} />}
-    </div>
-    
-    <div className="fixed bottom-2 right-2 text-[10px] text-gray-400 font-mono italic">
+      
+      <div className="fixed bottom-2 right-2 text-[10px] text-gray-400 font-mono italic">
         release: {APP_VERSION}
       </div>
     </div>
+    
   );
 }
 
