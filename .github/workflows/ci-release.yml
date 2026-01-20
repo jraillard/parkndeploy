@@ -30,6 +30,8 @@ jobs:
       - name: Build frontend
         working-directory: ${{ env.FRONTEND_DIR }}
         run: npm run build
+        env:
+          VITE_APP_VERSION: ${{ github.ref_name }}
 
       - name: Upload frontend artifact
         uses: actions/upload-artifact@v4
