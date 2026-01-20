@@ -1,6 +1,5 @@
 # Déclenche le workflow sur push ou déclenchement manuel
 on:
-  push:
   workflow_run: 
     workflows: ["CI Release Pipeline"]
     types:
