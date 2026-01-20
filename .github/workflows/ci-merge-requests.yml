@@ -30,6 +30,6 @@ jobs:
           with:
             dotnet-version: '9.0.x'
 
-        - name: Build the dotnet app in release mode
-          run: dotnet build --configuration Release
+        - name: Build the dotnet app in release mode and publish
+          run: dotnet build --configuration Release --property:PublishDir=publish
           working-directory: ./backend
