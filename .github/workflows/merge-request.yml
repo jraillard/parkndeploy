@@ -25,7 +25,6 @@ jobs:
 
   build_backend: 
     runs-on: ubuntu-latest
-    needs: deploy_infrastructure
     environment: production
 
     steps:
