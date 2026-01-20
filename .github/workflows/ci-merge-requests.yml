@@ -1,0 +1,30 @@
+on: [pull_request, workflow_dispatch]
+  
+jobs:
+    frontend-job:
+        runs-on: ubuntu-latest
+        environment: production
+
+        steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+
+        - name: Build the react app
+          run: tsc -b && vite build --debug
+          working-directory: ./frontend
+
+        - name: Run the linting script
+          run: eslint .
+          working-directory: ./frontend
+
+    backend-job:
+        runs-on: ubuntu-latest
+        environment: production
+        
+        steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+
+        - name: Build the dotnet app in release mode
+          run: dotnet build --configuration Release
+          working-directory: ./backend
