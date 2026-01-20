@@ -1,4 +1,4 @@
-on: [pull_request, workflow_dispatch]
+on: [release, workflow_dispatch]
 
 jobs:
     build-reactapp-lint-frontend-job:
@@ -13,25 +13,19 @@ jobs:
           run: npm install && npm run build
           working-directory: ./frontend
 
-        - name: Run the linting script
-          run: npm run lint
-          working-directory: ./frontend
-
-    build-dotnet-app-release-backend-job:
+    create-artifact-frontend-job:
         runs-on: ubuntu-latest
+        needs: build-reactapp-lint-frontend-job
         environment: production
 
         steps:
         - name: Checkout repository
           uses: actions/checkout@v4
 
-        - name: Setup .NET SDK 9.0.x
-          uses: actions/setup-dotnet@v4
+        - name: Create artifact for frontend
+          uses: actions/upload-artifact@v3
           with:
-            dotnet-version: '9.0.x'
+            name: frontend-artifact
 
-        - name: Build the dotnet app in release mode
-          run: dotnet build --configuration Release
-          working-directory: ./backend
-
-          
+        
+ 
