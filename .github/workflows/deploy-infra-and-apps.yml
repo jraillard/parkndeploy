@@ -1,4 +1,8 @@
-on: [push, workflow_dispatch]
+on:
+  push:
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]"
+
 
 permissions:
   id-token: write
