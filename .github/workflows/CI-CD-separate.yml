@@ -1,0 +1,67 @@
+on: [release, workflow_dispatch]
+  
+
+jobs:
+  frontend_CI:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Build the app
+      run: npm install && npm run build
+      working-directory: ./frontend  
+      
+    - name: Upload Frontend Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: frontend-dist
+        path: frontend/dist/
+
+  backend_CI:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup .NET SDK 9.0.x
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+        
+    - name: Publish the app
+      run: dotnet publish -c Release --property:PublishDir=publish # Publish the app to the API project publish folder
+      working-directory: ./backend # Specify where to find the solution file in repository
+          
+    - name: Upload Backend Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: backend-app
+        path: ./publish/
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [frontend_CI, backend_CI]
+    environment: production
+
+    steps:
+    - name: Download Frontend Artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: frontend-dist
+        run_id: ${{ github.event.workflow_run.id }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Download Backend Artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: backend-app
+        run_id: ${{ github.event.workflow_run.id }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+
+    #- name: Deploy to Environment
+      #run 
