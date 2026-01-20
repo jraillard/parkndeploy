@@ -1,0 +1,43 @@
+name: CI - Merge Requests
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  frontend_ci:
+    name: Frontend - Build & Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - working-directory: ./frontend
+        run: npm install
+
+      - working-directory: ./frontend
+        run: npm run build
+
+      - working-directory: ./frontend
+        run: npm run lint
+
+  backend_ci:
+    name: Backend - Build (Release)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - working-directory: ./backend
+        run: dotnet restore
+
+      - working-directory: ./backend
+        run: dotnet build --configuration Release --no-restore
