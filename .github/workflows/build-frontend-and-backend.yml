@@ -1,7 +1,7 @@
 on:
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
     build-frontend:
@@ -10,19 +10,13 @@ jobs:
         - name: Checkout code
           uses: actions/checkout@v2
 
-        - name: Set up Node.js
-          uses: actions/setup-node@v2
-          with:
-            node-version: '14'
-
-        - name: Install dependencies
-          run: npm install
-
-        - name: Build frontend
-          run: npm run build
+        - name: Build the app
+          run: npm install && npm run build
+          working-directory: ./frontend 
 
         - name: Run ESLint
-          run: npx eslint .
+          run: npm run lint
+          working-directory: ./frontend
 
 
     build-backend:
@@ -34,13 +28,11 @@ jobs:
         - name: Set up .NET
           uses: actions/setup-dotnet@v2
           with:
-            dotnet-version: '6.0.x'
-
-        - name: Restore dependencies
-          run: dotnet restore
+            dotnet-version: '9.0.x'
 
         - name: Build backend
-          run: dotnet build --no-restore --configuration Release
+          run: dotnet build
+          working-directory: ./backend
 
         
 
