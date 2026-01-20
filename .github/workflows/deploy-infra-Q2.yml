@@ -9,7 +9,6 @@ permissions:
 jobs:
   deploy_backend:
     runs-on: ubuntu-latest
-    needs: deploy_infrastructure
     environment: production
 
     steps:
@@ -27,7 +26,6 @@ jobs:
     
   deploy_frontend_Pipeline:
     runs-on: ubuntu-latest
-    needs: deploy_infrastructure
     environment: production
 
     steps:
