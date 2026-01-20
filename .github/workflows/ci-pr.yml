@@ -1,0 +1,54 @@
+# Déclenche le workflow uniquement sur Pull Requests vers la branche main
+on:
+  pull_request:
+    branches:
+      - main
+
+# Permissions pour le workflow
+permissions:
+  contents: read
+
+jobs:
+  # --------------------------
+  # Job 1 : Frontend
+  # --------------------------
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'  # ou la version utilisée dans ton projet
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./frontend
+
+      - name: Build frontend
+        run: npm run build
+        working-directory: ./frontend
+
+      - name: Run linter
+        run: npm run lint
+        working-directory: ./frontend
+
+  # --------------------------
+  # Job 2 : Backend
+  # --------------------------
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Build backend
+        run: dotnet build -c Release
+        working-directory: ./backend
