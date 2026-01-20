@@ -15,12 +15,6 @@ jobs:
         run: npm run lint
         working-directory: ./frontend
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '21'
-          cache: 'npm'
-
       - name: Install dependencies
         run: npm install
         working-directory: ./frontend
