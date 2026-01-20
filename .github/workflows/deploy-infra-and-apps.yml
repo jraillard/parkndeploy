@@ -1,5 +1,10 @@
 # Déclenche le workflow sur push ou déclenchement manuel
-on: [push, workflow_dispatch]
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+
 
 # Permissions pour OIDC + lecture du repo
 permissions:
