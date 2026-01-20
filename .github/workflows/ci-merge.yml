@@ -1,0 +1,39 @@
+on: [pull_request, workflow_dispatch]
+  
+jobs:
+  build_frontend:
+    runs-on: ubuntu-latest
+    environment: production
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./frontend
+
+      - name: Build React app
+        run: npm run build
+        working-directory: ./frontend
+
+      - name: Run lint
+        run: npm run lint
+        working-directory: ./frontend
+
+  build_backend:
+    runs-on: ubuntu-latest
+    environment: production
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Setup .NET SDK 9.0.x
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+
+    - name: Build .NET app
+      run: dotnet build --configuration Release
+      working-directory: ./backend
