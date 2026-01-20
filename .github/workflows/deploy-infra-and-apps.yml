@@ -1,8 +1,6 @@
 # Déclenche le workflow sur push ou déclenchement manuel
 on:
   push:
-    tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
   workflow_run: 
     workflows: ["CI Release Pipeline"]
     types:
