@@ -68,14 +68,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       
-      - name: Setup .NET SDK 9.0.x
-        uses: actions/setup-dotnet@v4
+      - name: Download backend artifact
+        uses: actions/download-artifact@v3
         with:
-          dotnet-version: '9.0.x'
-          
-      - name: Publish the app
-        run: dotnet publish -c Release --property:PublishDir=publish
-        working-directory: ./backend
+          name: backend-publish
+          path: ./backend-publish
 
       - name: Login to Azure 
         uses: azure/login@v2
@@ -88,7 +85,7 @@ jobs:
         uses: azure/webapps-deploy@v2
         with: 
           app-name: ${{ needs.deploy_infrastructure.outputs.appServiceName }}
-          package: ./backend/ParkNDeploy.Api/publish
+          package: ./backend-publish
 
   # --------------------------
   # Job 3 : Déployer le frontend
@@ -102,9 +99,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Build the app
-        run: npm install && npm run build
-        working-directory: ./frontend    
+      - name: Download frontend artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: frontend-dist
+          path: ./frontend/dist
 
       - name: Login to Azure 
         uses: azure/login@v2
@@ -122,7 +121,7 @@ jobs:
         uses: azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ env.SWA_DEPLOYMENT_TOKEN }}
-          app_location: frontend/dist
+          app_location: ./frontend/dist
           action: upload
           skip_app_build: true
           skip_api_build: true
