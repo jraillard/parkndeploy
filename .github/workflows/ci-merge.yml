@@ -1,11 +1,9 @@
 on: [pull_request, workflow_dispatch]
-
-env: 
-  APP_VERSION: ${{ github.ref_name }}
-
+  
 jobs:
   build_frontend:
     runs-on: ubuntu-latest
+    environment: production
     
     steps:
       - name: Checkout code
@@ -25,6 +23,7 @@ jobs:
 
   build_backend:
     runs-on: ubuntu-latest
+    environment: production
     
     steps:
     - name: Checkout repository
