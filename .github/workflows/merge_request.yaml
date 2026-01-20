@@ -1,43 +1,33 @@
-name: merge request
 
+name: CI Check - Merge Request
+
+# On ne le lance QUE sur les Merge Requests
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    branches: [ main, master ]
 
 jobs:
-  frontend_ci:
-    name: Frontend - Build & Lint
+  # Étape Frontend : on reprend tes commandes 'npm'
+  check_frontend:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
+      - name: Build & Lint Frontend
+        run: |
+          npm install
+          npm run lint
+          npm run build
+        working-directory: ./frontend
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 18
-
-      - working-directory: ./frontend
-        run: npm install
-
-      - working-directory: ./frontend
-        run: npm run build
-
-      - working-directory: ./frontend
-        run: npm run lint
-
-  backend_ci:
-    name: Backend - Build (Release)
+  # Étape Backend : on reprend ton 'dotnet publish' (qui inclut le build)
+  check_backend:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
-
-      - uses: actions/setup-dotnet@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
-
-      - working-directory: ./backend
-        run: dotnet restore
-
-      - working-directory: ./backend
-        run: dotnet build --configuration Release --no-restore
+      - name: Build Backend Release
+        run: dotnet build -c Release
+        working-directory: ./backend
