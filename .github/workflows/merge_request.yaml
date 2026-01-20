@@ -1,0 +1,40 @@
+trigger: none
+
+pr:
+  branches:
+    include:
+      - main
+      
+
+stages:
+- stage: CI_Merge_Request
+  displayName: CI for Merge Requests
+  jobs:
+
+  - job: Frontend_CI
+    displayName: Frontend - Build & Lint
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: '18.x'
+
+      - script: |
+          npm install
+          npm run build
+          npm run lint
+        workingDirectory: frontend
+        displayName: Build and lint React app
+
+  - job: Backend_CI
+    displayName: Backend - Build Release
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+      - task: DotNetCoreCLI@2
+        displayName: Build .NET app (Release)
+        inputs:
+          command: build
+          projects: backend/**/*.csproj
+          arguments: '--configuration Release'
