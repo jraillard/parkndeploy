@@ -130,7 +130,7 @@ jobs:
 
   deploy_frontend:
     runs-on: ubuntu-latest
-    needs: deploy_infrastructure
+    needs: [deploy_infrastructure, build_frontend]
     environment: production
 
     steps:
