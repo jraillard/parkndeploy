@@ -12,6 +12,51 @@ env:
   AZURE_RG_NAME: rg-${{ vars.PROJECT_NAME }}-${{ vars.AZURE_RESOURCE_IDENTIFIER }}
 
 jobs:
+  build_frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Build the app
+      run: npm install && npm run build
+      working-directory: ./frontend
+
+    - name: Run ESLint
+      run: npm run lint
+      working-directory: ./frontend
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: frontend-artifact
+        path: ./frontend/dist
+
+
+  build_backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Build backend
+        run: dotnet build
+        working-directory: ./backend
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-artifact
+          path: ./backend/publish
+
+
+
   deploy_infrastructure:
     runs-on: ubuntu-latest
     environment: production # bind the job to the production environment
@@ -50,18 +95,21 @@ jobs:
 
   deploy_backend:
     runs-on: ubuntu-latest
-    needs: deploy_infrastructure
+    needs: [deploy_infrastructure, build_backend]
     environment: production
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+    - name: Download backend artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: backend-artifact
+        path: ./backend/publish
     
-    - name: Setup .NET SDK 9.0.x
-      uses: actions/setup-dotnet@v4
+    - name: Set up .NET
+      uses: actions/setup-dotnet@v2
       with:
         dotnet-version: '9.0.x'
-        
+    
     - name: Publish the app
       run: dotnet publish -c Release --property:PublishDir=publish # Publish the app to the API project publish folder
       working-directory: ./backend # Specify where to find the solution file in repository
@@ -79,18 +127,18 @@ jobs:
         app-name: ${{ needs.deploy_infrastructure.outputs.appServiceName }} # Access to the previous job output to get the appServiceName deployed with bicep
         package: ./backend/ParkNDeploy.Api/publish # Path to the previously published app
 
+
   deploy_frontend:
     runs-on: ubuntu-latest
     needs: deploy_infrastructure
     environment: production
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Build the app
-      run: npm install && npm run build
-      working-directory: ./frontend    
+    - name: Download frontend artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: frontend-artifact
+        path: ./frontend/dist
 
     - name: Login to Azure 
       uses: azure/login@v2

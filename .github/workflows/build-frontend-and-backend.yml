@@ -4,7 +4,7 @@ on:
       - main
 
 jobs:
-    build-frontend:
+    build_frontend:
       runs-on: ubuntu-latest
       steps:
         - name: Checkout code
@@ -19,7 +19,7 @@ jobs:
           working-directory: ./frontend
 
 
-    build-backend:
+    build_backend:
       runs-on: ubuntu-latest
       steps:
         - name: Checkout code
