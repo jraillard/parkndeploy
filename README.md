@@ -109,5 +109,3 @@ npm run dev
 First of all, I hope this initiation gave you interest into DevOps concepts and that you understand how it could help you in your day-to-day tasks in real-world project.
 
 Now for a treasure trove of additional resources to dive deeper into DevOps concepts, check out the [**to go further section**](doc/to_go_further.md). :eyes:
-
-Test triggering pipeline on tag 1.0.1
