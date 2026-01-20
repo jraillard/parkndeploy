@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿
+using System.Linq;
 using System.Text.Json.Serialization;
 
 namespace ParkNDeploy.Api.Services
@@ -115,3 +116,4 @@ namespace ParkNDeploy.Api.Services
         Red = 3,
     }
 }
+
