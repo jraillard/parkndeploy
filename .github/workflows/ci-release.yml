@@ -1,0 +1,61 @@
+name: CI Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*' 
+
+env:
+  FRONTEND_DIR: frontend
+  BACKEND_DIR: backend
+
+jobs:
+  frontend_release:
+    name: Frontend - Build & Artifact
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        working-directory: ${{ env.FRONTEND_DIR }}
+        run: npm install
+
+      - name: Build frontend
+        working-directory: ${{ env.FRONTEND_DIR }}
+        run: npm run build
+
+      - name: Upload frontend artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: ${{ env.FRONTEND_DIR }}/dist
+
+  backend_release:
+    name: Backend - Publish & Artifact
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Publish backend
+        working-directory: ${{ env.BACKEND_DIR }}
+        run: dotnet publish -c Release --output publish
+
+      - name: Upload backend artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-publish
+          path: ${{ env.BACKEND_DIR }}/publish
