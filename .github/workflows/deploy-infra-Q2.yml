@@ -1,4 +1,4 @@
-on: [pull_request, workflow_dispatch]
+on: [pull_request]
 
 permissions:
   # Require write permission to Fetch an OIDC token (required for federated credential) and write it
@@ -13,8 +13,8 @@ jobs:
 
   deploy_backend:
     runs-on: ubuntu-latest
-    environment: production
     needs: deploy_infrastructure
+    environment: production
 
     steps:
     - name: Checkout repository
