@@ -1,57 +1,17 @@
-on: 
-  push:
-    tags:
-      - 'v[0-9].[0-9].[0-9]'
+
+on:
+  pull_request:
   workflow_dispatch:
-# on
-# ...
-
-
 
 permissions:
   # Require write permission to Fetch an OIDC token (required for federated credential) and write it
   # It will be automatically used on actions / cli that needs it
   id-token: write
 
-
-    
-    
 env: 
   AZURE_RG_NAME: rg-${{ vars.PROJECT_NAME }}-${{ vars.AZURE_RESOURCE_IDENTIFIER }}
-  
+
 jobs:
-  deploy_infrastructure:
-    runs-on: ubuntu-latest
-    environment: production # bind the job to the production environment
-    outputs:
-      appServiceName: ${{ steps.bicep_deploy.outputs.appServiceName }}
-      staticWebAppName: ${{ steps.bicep_deploy.outputs.staticWebAppName }}
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Login to Azure 
-      uses: azure/login@v2
-      with:
-        client-id: ${{ secrets.AZURE_CLIENT_ID }}
-        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-        enable-AzPSSession: true 
-
-    - name: Create resource group if not exists      
-      run: |
-        az group show --name ${{ env.AZURE_RG_NAME }} ||
-        az group create --name ${{ env.AZURE_RG_NAME }} --location ${{ secrets.AZURE_REGION }}
-
-    - name: Deploy bicep
-      id: bicep_deploy
-      uses: azure/arm-deploy@v2
-      with:
-        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-        region: ${{ secrets.AZURE_REGION }}
-        template: ./infrastructure/main.bicep
-        parameters: project=${{ vars.PROJECT_NAME }} location=${{ secrets.AZURE_REGION }} swaLocation=${{ secrets.AZURE_SWA_REGION }} identifier=${{ vars.AZURE_RESOURCE_IDENTIFIER }}
-        resourceGroupName: ${{ env.AZURE_RG_NAME }}
   deploy_backend:
     runs-on: ubuntu-latest
     needs: deploy_infrastructure
@@ -123,3 +83,15 @@ jobs:
         action: upload
         skip_app_build: true
         skip_api_build: true
+  deploy_lint:
+    runs-on: ubuntu-latest
+    needs: deploy_infrastructure
+    environment: production
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Build Lint
+      run: node run eslint.config.js
+      working-directory: ./frontend   
