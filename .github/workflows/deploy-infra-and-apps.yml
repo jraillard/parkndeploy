@@ -1,4 +1,8 @@
-on: [push, workflow_dispatch]
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+  workflow_dispatch:
 
 permissions:
   # Require write permission to Fetch an OIDC token (required for federated credential) and write it
@@ -20,6 +24,15 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+
+    - name: Validate Semantic Version tag
+      run: |
+        echo "Tag detected: $GITHUB_REF_NAME"
+        if [[ ! "$GITHUB_REF_NAME" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          echo "Invalid tag format. Expected MAJOR.MINOR.PATCH"
+          exit 1
+        fi
+
 
     - name: Login to Azure 
       uses: azure/login@v2
