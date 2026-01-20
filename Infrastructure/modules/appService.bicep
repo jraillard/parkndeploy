@@ -2,7 +2,7 @@ param location string
 param project string
 param identifier string
 
-// App Service Plan identifier that will host our App Service
+// App Service Plan identifier that will host our App Servi
 param planId string
 
 resource app 'Microsoft.Web/sites@2022-03-01' = {
