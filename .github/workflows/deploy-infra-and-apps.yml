@@ -1,4 +1,7 @@
-on: [push, workflow_dispatch]
+on: 
+  push:    
+    tags: [ '^\d+\.\d+\.\d+$' ]
+  workflow_dispatch:
 
 permissions:
   # Require write permission to Fetch an OIDC token (required for federated credential) and write it
