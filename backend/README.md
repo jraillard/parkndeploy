@@ -43,3 +43,5 @@ As mentionned in [main README file](../README.md#backend) :
 - Open the `ParkNDeploy.sln` file with Visual Studio 
 - Hit the `Run` button using the `Project Https` profile (default one)
 - Wait the Swagger API to launch on your default navigator
+
+Test merge request...
