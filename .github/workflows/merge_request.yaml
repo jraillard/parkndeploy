@@ -1,4 +1,4 @@
-name: CI - Merge Requests
+name: merge request
 
 on:
   pull_request:
