@@ -1,0 +1,67 @@
+name: CI Release Pipeline
+
+# Déclenche le pipeline sur push sur main ou manuellement
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  # --------------------------
+  # Job 1 : Build frontend
+  # --------------------------
+  build_frontend:
+    runs-on: ubuntu-latest
+    outputs:
+      frontend_artifact: ${{ steps.upload_frontend.outputs.artifact-path }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 21
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./frontend
+
+      - name: Build frontend
+        run: npm run build
+        working-directory: ./frontend
+
+      - name: Upload frontend artifact
+        id: upload_frontend
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: ./frontend/dist
+
+  # --------------------------
+  # Job 2 : Build backend
+  # --------------------------
+  build_backend:
+    runs-on: ubuntu-latest
+    outputs:
+      backend_artifact: ${{ steps.upload_backend.outputs.artifact-path }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Publish backend
+        run: dotnet publish -c Release --property:PublishDir=publish
+        working-directory: ./backend
+
+      - name: Upload backend artifact
+        id: upload_backend
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-publish
+          path: ./backend/ParkNDeploy.Api/publish
