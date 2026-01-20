@@ -34,7 +34,7 @@ jobs:
 
       - name: Upload frontend artifact
         id: upload_frontend
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: frontend-dist
           path: ./frontend/dist
@@ -61,7 +61,7 @@ jobs:
 
       - name: Upload backend artifact
         id: upload_backend
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: backend-publish
           path: ./backend/ParkNDeploy.Api/publish
