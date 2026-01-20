@@ -68,7 +68,7 @@ jobs:
       uses: actions/upload-artifact@v6
       with:
         name: backend-artifact
-        path: ./backend/publish
+        path: ./backend/ParkNDeploy.Api/publish
         if-no-files-found: error
 
   build_frontend:
@@ -113,6 +113,7 @@ jobs:
       uses: actions/download-artifact@v5
       with:
         name: backend-artifact
+        path: ./backend/ParkNDeploy.Api/publish
 
     - name: Login to Azure 
       uses: azure/login@v2
@@ -138,7 +139,8 @@ jobs:
     - name: Download Frontend Artifact
       uses: actions/download-artifact@v5
       with:
-        name: frontend-artifact  
+        name: frontend-artifact
+        path: ./frontend/dist
 
     - name: Login to Azure 
       uses: azure/login@v2
