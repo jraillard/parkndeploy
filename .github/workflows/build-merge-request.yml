@@ -4,18 +4,37 @@ on:
     - main
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
+  build-backend:
+    runs-on: ubuntu-latest
 
-        steps:
-        - name: Checkout repository
-          uses: actions/checkout@v4
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Setup .NET SDK 9.0.x
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
         
-        - name: Setup .NET SDK 9.0.x
-          uses: actions/setup-dotnet@v4
-          with:
-            dotnet-version: '9.0.x'
-            
-        - name: Publish the app
-          run: dotnet build
-          working-directory: ./backend
+    - name: Publish the app
+      run: dotnet build
+      working-directory: ./backend
+  build-frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Install dependencies
+      run: npm install
+      working-directory: ./frontend
+
+    - name: Build the app
+      run: npm run build
+      working-directory: ./frontend
