@@ -1,5 +1,10 @@
 
-on: [push, workflow_dispatch]
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+  workflow_dispatch:
+
 
 env: 
   AZURE_RG_NAME: rg-${{ vars.PROJECT_NAME }}-${{ vars.AZURE_RESOURCE_IDENTIFIER }}
@@ -9,6 +14,7 @@ permissions:
 
 jobs:
   deploy_infrastructure:
+  
     runs-on: ubuntu-latest
     environment: production
     outputs:
