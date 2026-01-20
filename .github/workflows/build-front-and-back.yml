@@ -1,0 +1,31 @@
+on: [pull_request, workflow_dispatch]
+  
+
+jobs:
+  frontend_CI:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Build the app
+      run: npm install && npm run build
+      working-directory: ./frontend    
+
+    - name: Start the linting script
+      run: npm run lint
+      working-directory: ./frontend
+
+  backend_build:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Build backend
+      run: dotnet build
+      working-directory: ./backend
