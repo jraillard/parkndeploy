@@ -1,3 +1,5 @@
+on: [pull_request workflow_dispatch]
+
 jobs:
     build-reactapp-lint-frontend-job:
         runs-on: ubuntu-latest
