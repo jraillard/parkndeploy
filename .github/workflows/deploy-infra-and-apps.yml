@@ -101,6 +101,7 @@ jobs:
       - name: Deploy frontend to Static Web App
         uses: azure/static-web-apps-deploy@v1
         with:
+          azure_static_web_apps_api_token: ${{ env.SWA_DEPLOYMENT_TOKEN }}
           app_location: frontend/dist
           action: upload
           skip_app_build: true
