@@ -1,0 +1,46 @@
+name: CI on Pull Request
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./frontend
+
+      - name: Build React app
+        run: npm run build
+        working-directory: ./frontend
+
+      - name: Run lint
+        run: npm run lint
+        working-directory: ./frontend
+
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Build backend in Release
+        run: dotnet build -c Release
+        working-directory: ./backend
