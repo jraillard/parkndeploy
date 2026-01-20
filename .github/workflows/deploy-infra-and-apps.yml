@@ -1,5 +1,4 @@
 on: [push, workflow_dispatch]
-
 env: 
   AZURE_RG_NAME: rg-${{ vars.PROJECT_NAME }}-${{ vars.AZURE_RESOURCE_IDENTIFIER }}
   
