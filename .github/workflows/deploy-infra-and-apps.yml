@@ -1,5 +1,8 @@
-on: [push, workflow_dispatch]
-
+on:
+  workflow_run:
+    workflows: ["CI Release"]
+    types:
+      - completed  # This ensures CD runs only after CI Release completes successfully
 
 permissions:
   # Require write permission to Fetch an OIDC token (required for federated credential) and write it
@@ -49,6 +52,13 @@ jobs:
     environment: production
 
     steps:
+
+    - name: Download backend artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: backend-publish
+        path: ./backend/publish
+
     - name: Checkout repository
       uses: actions/checkout@v4
     
@@ -57,9 +67,9 @@ jobs:
       with:
         dotnet-version: '9.0.x'
         
-    - name: Publish the app
-      run: dotnet publish -c Release --property:PublishDir=publish # Publish the app to the API project publish folder
-      working-directory: ./backend # Specify where to find the solution file in repository
+     #- name: Publish the app
+     # run: dotnet publish -c Release --property:PublishDir=publish # Publish the app to the API project publish folder
+     # working-directory: ./backend # Specify where to find the solution file in repository
 
     - name: Login to Azure 
       uses: azure/login@v2
@@ -72,20 +82,26 @@ jobs:
       uses: azure/webapps-deploy@v2
       with: 
         app-name: ${{ needs.deploy_infrastructure.outputs.appServiceName }} # Access to the previous job output to get the appServiceName deployed with bicep
-        package: ./backend/ParkNDeploy.Api/publish # Path to the previously published app
-
+        package: ./backend/publish
   deploy_frontend:
     runs-on: ubuntu-latest
     needs: deploy_infrastructure
     environment: production
 
     steps:
+
+    - name: Download frontend artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: frontend-dist
+        path: ./frontend/dist
+
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Build the app
-      run: npm install && npm run build
-      working-directory: ./frontend    
+    #- name: Build the app
+    # run: npm install && npm run build
+    # working-directory: ./frontend    
 
     - name: Login to Azure 
       uses: azure/login@v2
