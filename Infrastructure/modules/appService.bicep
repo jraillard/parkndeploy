@@ -14,7 +14,7 @@ resource app 'Microsoft.Web/sites@2022-03-01' = {
     reserved: true
 
     siteConfig: {
-      linuxFxVersion: 'DOTNETCORE|9.0' // Specify to setup the .NET Core 9.0 runtime (used by our backend API) on the Linux machine under the hood
+      linuxFxVersion: 'DOTNETCORE|9.0' // Specify to setup t .NET Core 9.0 runtime (used by our backend API) on the Linux machine under the hood
     }
   }
 }
