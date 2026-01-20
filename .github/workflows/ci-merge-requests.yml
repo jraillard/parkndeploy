@@ -1,7 +1,7 @@
 on: [pull_request, workflow_dispatch]
   
 jobs:
-    frontend-job:
+    build-reactapp-lint-frontend-job:
         runs-on: ubuntu-latest
         environment: production
 
@@ -17,7 +17,7 @@ jobs:
           run: npm run lint
           working-directory: ./frontend
 
-    backend-job:
+    build-dotnet-app-release-backend-job:
         runs-on: ubuntu-latest
         environment: production
 
