@@ -22,10 +22,10 @@ jobs:
         - name: Checkout repository
           uses: actions/checkout@v4
 
-        - name: Create artifact for frontend
-          uses: actions/upload-artifact@v3
-          with:
-            name: frontend-artifact
+        steps:
+        - publish: ./frontend
+          artifact: FrontendArtifact
+
 
         
  
