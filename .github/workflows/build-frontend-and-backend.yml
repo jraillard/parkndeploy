@@ -36,11 +36,8 @@ jobs:
           with:
             dotnet-version: '6.0.x'
 
-        - name: Restore dependencies
-          run: dotnet restore
-
         - name: Build backend
-          run: dotnet build --no-restore --configuration Release
+          run: dotnet build
 
         
 
