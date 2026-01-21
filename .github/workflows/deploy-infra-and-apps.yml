@@ -32,7 +32,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: react-frontend-build
-          path : ./frontend
+          
 
   build-dotnet-app-release-backend-job:
       runs-on: ubuntu-latest
@@ -56,7 +56,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: dotnet-backend-build
-          path : ./backend
 
   deploy_infrastructure:
     runs-on: ubuntu-latest
@@ -111,7 +110,7 @@ jobs:
       uses : actions/download-artifact@v4
       with :
         name : dotnet-backend-build
-        path: ./backend
+      
         working-directory: ./backend # Specify where to find the solution file in repository
 
     - name: Login to Azure 
@@ -141,7 +140,7 @@ jobs:
       uses : actions/download-artifact@v4
       with :
         name : react-frontend-build
-        path: ./frontend
+        
 
         
     - name: Login to Azure 
