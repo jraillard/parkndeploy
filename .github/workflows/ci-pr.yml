@@ -1,0 +1,34 @@
+on:
+  pull_request:  # Ce workflow se déclenche uniquement sur les MR
+
+jobs:
+  ci_merge_request:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Backend
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Build backend
+        run: dotnet build --configuration Release
+        working-directory: ./backend
+
+      # Frontend
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '21.7.1'
+
+      - name: Build frontend
+        run: npm install && npm run build
+        working-directory: ./frontend
+
+      - name: Lint frontend
+        run: npm run lint
+        working-directory: ./frontend
