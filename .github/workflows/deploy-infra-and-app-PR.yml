@@ -1,5 +1,7 @@
-on: [pull_request, workflow_dispatch]
-
+on:
+  pull_request:
+    branches:
+      - main
 jobs:
     build-reactapp-lint-frontend-job:
         runs-on: ubuntu-latest
@@ -34,4 +36,5 @@ jobs:
           run: dotnet build --configuration Release
           working-directory: ./backend
 
-          
+   
+
