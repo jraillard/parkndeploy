@@ -4,6 +4,11 @@ on:
       - '1.1.0'
   workflow_dispatch:
 
+permissions:
+  # Require write permission to Fetch an OIDC token (required for federated credential) and write it
+  # It will be automatically used on actions / cli that needs it
+  id-token: write
+
 env: 
   AZURE_RG_NAME: rg-${{ vars.PROJECT_NAME }}-${{ vars.AZURE_RESOURCE_IDENTIFIER }}
 
@@ -24,7 +29,7 @@ jobs:
         working-directory: ./backend
 
       - name: Upload backend artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: backend-artifact
           path: ./artifacts/backend
@@ -39,7 +44,7 @@ jobs:
         run: npm install && npm run build --prefix ./frontend
 
       - name: Upload frontend artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: frontend-artifact
           path: ./frontend/dist
@@ -84,7 +89,7 @@ jobs:
     needs: [build_backend, deploy_infrastructure]
     steps:
       - name: Download backend artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: backend-artifact
           path: ./backend
@@ -107,7 +112,7 @@ jobs:
     needs: [build_frontend, deploy_infrastructure]
     steps:
       - name: Download frontend artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: frontend-artifact
           path: ./frontend
