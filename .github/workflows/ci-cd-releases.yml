@@ -34,7 +34,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: frontend-build
-          path: ./frontend
 
   build_dotnet_app_release_backend_job:
       runs-on: ubuntu-latest
@@ -109,7 +108,6 @@ jobs:
       uses: actions/download-artifact@v5
       with:
         name: frontend-build
-        path: ./frontend
 
     - name: Login to Azure 
       uses: azure/login@v2
@@ -128,7 +126,7 @@ jobs:
       uses: azure/static-web-apps-deploy@v1 
       with:
         azure_static_web_apps_api_token: ${{ env.SWA_DEPLOYMENT_TOKEN }}
-        app_location: frontend/dist
+        app_location: .
         action: upload
         skip_app_build: true
         skip_api_build: true
@@ -158,4 +156,4 @@ jobs:
       uses: azure/webapps-deploy@v2
       with: 
         app-name: ${{ needs.deploy_infrastructure.outputs.appServiceName }} # Access to the previous job output to get the appServiceName deployed with bicep
-        package: backend-build
+        package: .
