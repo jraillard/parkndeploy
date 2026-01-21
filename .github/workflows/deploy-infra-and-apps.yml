@@ -2,6 +2,8 @@ on:
   push:
     tags:
       - '[0-9].[0-9].[0-9]'
+  pull_request:
+    branches: [ "main" ]
 
 permissions:
   # Require write permission to Fetch an OIDC token (required for federated credential) and write it
@@ -58,9 +60,17 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Build the app
-      run: npm install && npm run build
+    - name: Install dependencies
+      run: npm install
       working-directory: ./frontend    
+
+    - name: Run linting
+      run: npm run lint
+      working-directory: ./frontend
+
+    - name: Build the app
+      run: npm run build
+      working-directory: ./frontend 
 
     - name: Login to Azure 
       uses: azure/login@v2
@@ -96,6 +106,10 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '9.0.x'
+
+    - name: Build Check (Release)
+      run: dotnet build -c Release
+      working-directory: ./backend
         
     - name: Publish the app
       run: dotnet publish -c Release --property:PublishDir=publish # Publish the app to the API project publish folder
