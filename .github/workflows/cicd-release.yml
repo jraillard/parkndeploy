@@ -112,8 +112,8 @@ jobs:
       - name: Deploy backend to App Service
         uses: azure/webapps-deploy@v2
         with: 
-          app-name: ${{ secrets.BACKEND_APP_NAME }}
-          package: ./backend
+          app-name: ${{ needs.deploy_infrastructure.outputs.appServiceName }} # Access to the previous job output to get the appServiceName deployed with bicep
+          package: ./backend/ParkNDeploy.Api/publish # Path to the previously published app
 
   deploy_frontend:
     runs-on: ubuntu-latest
@@ -135,8 +135,8 @@ jobs:
 
       - name: Get Static Web App deployment token
         run: |      
-          SWA_DEPLOYMENT_TOKEN=$(az staticwebapp secrets list -n ${{ secrets.FRONTEND_APP_NAME }} -o tsv --query properties.apiKey)
-          echo SWA_DEPLOYMENT_TOKEN=$SWA_DEPLOYMENT_TOKEN >> $GITHUB_ENV
+            SWA_DEPLOYMENT_TOKEN=$(az staticwebapp secrets list -n ${{ needs.deploy_infrastructure.outputs.staticWebAppName }} -o tsv --query properties.apiKey)
+            echo SWA_DEPLOYMENT_TOKEN=$SWA_DEPLOYMENT_TOKEN >> $GITHUB_ENV
 
       - name: Deploy frontend to Static Web App
         uses: azure/static-web-apps-deploy@v1
