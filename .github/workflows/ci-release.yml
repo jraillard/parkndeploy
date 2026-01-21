@@ -1,0 +1,71 @@
+name: CI Release
+
+# Ce workflow peut être déclenché manuellement pour une release
+on:
+  workflow_dispatch:
+
+jobs:
+  # Job Frontend
+  frontend_release:
+    name: Frontend Release
+    runs-on: ubuntu-latest
+
+    steps:
+      # Récupérer le code du repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Installer Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Installer les dépendances
+      - name: Install frontend dependencies
+        run: npm install
+        working-directory: ./frontend
+
+      # Build l'application React
+      - name: Build React app
+        run: npm run build
+        working-directory: ./frontend
+
+      # Upload l'artifact frontend pour le CD
+      - name: Upload frontend artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: frontend-build
+          path: ./frontend/build  # Dossier généré par npm run build
+
+  # Job Backend
+  backend_release:
+    name: Backend Release
+    runs-on: ubuntu-latest
+
+    steps:
+      # Récupérer le code du repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Installer le SDK .NET
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      # Restaurer les dépendances .NET
+      - name: Restore backend dependencies
+        run: dotnet restore
+        working-directory: ./backend
+
+      - name: Publish backend
+        run: dotnet publish ./NomDuProjet.csproj -c Release -o ./publish
+        working-directory: ./backend
+
+      
+      - name: Upload backend artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: backend-build
+          path: ./backend/publish
