@@ -36,7 +36,7 @@ Every suggested improvements will be followed with clue(s) to achieve it.
 
 :star::star: Create the CI Pipeline for releases and connect it to our CD Pipeline
 
-&rarr; At this step, CI release pipeline could just be single or multiple jobs (for both frontend & backend) executed before CD pipeline Jobs. Spliting into two distinct workflows is further refactoring step.
+&rarr; At this step, CI release pipeline could just be single or multiple jobs (for both frontend & backend) executed before CD pipeline Jobs. **Spliting into two distinct workflows is further refactoring step**.
 
 &rarr; The CI release pipeline would (in parallel or sequentially) : 
 - For Frontend app :
