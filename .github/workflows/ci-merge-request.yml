@@ -50,5 +50,4 @@ jobs:
         working-directory: ./backend
 
       - name: Build backend (Release)
-        run: dotnet build -c Release
-        working-directory: ./backend
+        run: dotnet build -c
