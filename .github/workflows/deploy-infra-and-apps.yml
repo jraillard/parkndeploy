@@ -1,112 +1,124 @@
-name: Deploy Infra and Apps (CD)
-
 on:
   workflow_run:
     workflows: ["CI Release"]
     types: [completed]
   workflow_dispatch:
 
-env:
-  AZURE_RG_NAME: rg-${{ vars.PROJECT_NAME }}-${{ vars.AZURE_RESOURCE_IDENTIFIER }}
 
+
+env: 
+  AZURE_RG_NAME: rg-${{ vars.PROJECT_NAME }}-${{ vars.AZURE_RESOURCE_IDENTIFIER }}
+  
 permissions:
   id-token: write
-  contents: read
 
 jobs:
   deploy_infrastructure:
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+  
     runs-on: ubuntu-latest
     environment: production
     outputs:
-      appServiceName: ${{ steps.bicep_deploy.outputs.appServiceName }}
-      staticWebAppName: ${{ steps.bicep_deploy.outputs.staticWebAppName }}
+          appServiceName: ${{ steps.bicep_deploy.outputs.appServiceName }}
+          staticWebAppName: ${{ steps.bicep_deploy.outputs.staticWebAppName }}
+    
+ 
+
 
     steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Login to Azure 
+      uses: azure/login@v2
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        enable-AzPSSession: true 
+
+    - name: Create resource group if not exists      
+      run: |
+        az group show --name ${{ env.AZURE_RG_NAME }} ||
+        az group create --name ${{ env.AZURE_RG_NAME }} --location ${{ secrets.AZURE_REGION }}
+
+    - name: Deploy bicep
+      id: bicep_deploy
+      uses: azure/arm-deploy@v2
+      with:
+        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+        region: ${{ secrets.AZURE_REGION }}
+        template: ./infrastructure/main.bicep
+        parameters: project=${{ vars.PROJECT_NAME }} location=${{ secrets.AZURE_REGION }} swaLocation=${{ secrets.AZURE_SWA_REGION }} identifier=${{ vars.AZURE_RESOURCE_IDENTIFIER }}
+        resourceGroupName: ${{ env.AZURE_RG_NAME }}
+
+  deploy_backend:
+      runs-on: ubuntu-latest
+      needs: deploy_infrastructure
+      environment: production
+    
+      steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup .NET SDK 9.0.x
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+          
+      - name: Publish the app
+        run: dotnet publish -c Release --property:PublishDir=publish # Publish the app to the API project publish folder
+        working-directory: ./backend # Specify where to find the solution file in repository
+
+      - name: Login to Azure 
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        
+      - name: Deploy backend to App Service
+        uses: azure/webapps-deploy@v2
+        with: 
+          app-name: ${{ needs.deploy_infrastructure.outputs.appServiceName }} # Access to the previous job output to get the appServiceName deployed with bicep
+          package: ./backend/ParkNDeploy.Api/publish # Path to the previously published app
+  # deploy_infrastructure ...
+    # deploy_infrastructure ...
+
+  deploy_frontend:
+      runs-on: ubuntu-latest
+      needs: deploy_infrastructure
+      environment: production
+
+      steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Login to Azure
+      - name: Build the app
+        run: npm install && npm run build
+        working-directory: ./frontend    
+
+      - name: Login to Azure 
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          enable-AzPSSession: true
-
-      - name: Create resource group if not exists
-        run: |
-          az group show --name ${{ env.AZURE_RG_NAME }} ||
-          az group create --name ${{ env.AZURE_RG_NAME }} --location ${{ secrets.AZURE_REGION }}
-
-      - name: Deploy bicep
-        id: bicep_deploy
-        uses: azure/arm-deploy@v2
-        with:
-          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-          region: ${{ secrets.AZURE_REGION }}
-          template: ./infrastructure/main.bicep
-          parameters: project=${{ vars.PROJECT_NAME }} location=${{ secrets.AZURE_REGION }} swaLocation=${{ secrets.AZURE_SWA_REGION }} identifier=${{ vars.AZURE_RESOURCE_IDENTIFIER }}
-          resourceGroupName: ${{ env.AZURE_RG_NAME }}
-
-  deploy_backend:
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
-    runs-on: ubuntu-latest
-    needs: deploy_infrastructure
-    environment: production
-
-    steps:
-      - name: Download backend artifact
-        uses: actions/download-artifact@v4
-        with:
-          run-id: ${{ github.event.workflow_run.id }}
-          name: backend-artifact
-          path: artifacts/backend
-
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      - name: Deploy backend to App Service (from artifact)
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: ${{ needs.deploy_infrastructure.outputs.appServiceName }}
-          package: artifacts/backend
-
-  deploy_frontend:
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
-    runs-on: ubuntu-latest
-    needs: deploy_infrastructure
-    environment: production
-
-    steps:
-      - name: Download frontend artifact
-        uses: actions/download-artifact@v4
-        with:
-          run-id: ${{ github.event.workflow_run.id }}
-          name: frontend-artifact
-          path: artifacts/frontend
-
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }} 
+      
+  # Login to Azure
+  # ...
 
       - name: Get Static Web App deployment token
-        run: |
-          SWA_DEPLOYMENT_TOKEN=$(az staticwebapp secrets list -n ${{ needs.deploy_infrastructure.outputs.staticWebAppName }} -o tsv --query properties.apiKey)
-          echo SWA_DEPLOYMENT_TOKEN=$SWA_DEPLOYMENT_TOKEN >> $GITHUB_ENV
+        run: |      
+              SWA_DEPLOYMENT_TOKEN=$(az staticwebapp secrets list -n ${{ needs.deploy_infrastructure.outputs.staticWebAppName }} -o tsv --query properties.apiKey)
+              echo SWA_DEPLOYMENT_TOKEN=$SWA_DEPLOYMENT_TOKEN >> $GITHUB_ENV
 
-      - name: Deploy frontend to Static Web App (from artifact)
+  # Deploy frontend to Static Web App
+  # ...
+      - name: Deploy frontend to Static Web App
         uses: azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ env.SWA_DEPLOYMENT_TOKEN }}
-          app_location: artifacts/frontend
+          app_location: frontend/dist
           action: upload
           skip_app_build: true
           skip_api_build: true
