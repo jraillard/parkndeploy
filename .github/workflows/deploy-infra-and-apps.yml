@@ -7,6 +7,7 @@ permissions:
   # Require write permission to Fetch an OIDC token (required for federated credential) and write it
   # It will be automatically used on actions / cli that needs it
   id-token: write
+  contents: write
 
 env: 
   AZURE_RG_NAME: rg-${{ vars.PROJECT_NAME }}-${{ vars.AZURE_RESOURCE_IDENTIFIER }}
@@ -50,14 +51,31 @@ jobs:
         resourceGroupName: ${{ env.AZURE_RG_NAME }}
 
 
-  # ${{ github.event.release.tag_name }}
-  
   build_frontend:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+
+    - name: Set version from tag
+      env:
+        TAG: ${{ github.ref_name }}
+      run: |
+        echo "Tag: $TAG"
+        
+        # remove leading v if present
+        VERSION=${TAG#v}
+        
+        echo "Version: $VERSION"
+        node -e "const fs=require('fs'); const p='frontend/package.json'; const pkg=JSON.parse(fs.readFileSync(p)); pkg.version='${VERSION}'; fs.writeFileSync(p, JSON.stringify(pkg,null,2)+'\n');"
+        
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        
+        git add frontend/package.json
+        git commit -m "chore: sync frontend package.json version to ${VERSION}" || echo "no changes to commit"
+        git push origin HEAD:${{ github.ref_name }}
 
     - name: Build the app
       run: npm install && npm run build
@@ -73,6 +91,14 @@ jobs:
         name: frontend-artifact
         path: ./frontend/dist
         if-no-files-found: error
+
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    
+
 
 
   deploy_frontend:
