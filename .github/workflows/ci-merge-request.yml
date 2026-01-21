@@ -1,0 +1,53 @@
+name: CI - Merge Request
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  frontend_ci:
+    name: Frontend CI
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install frontend dependencies
+        run: npm install
+        working-directory: ./frontend
+
+      - name: Build React app
+        run: npm run build
+        working-directory: ./frontend
+
+      - name: Run frontend lint
+        run: npm run lint
+        working-directory: ./frontend
+
+
+  backend_ci:
+    name: Backend CI
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore backend dependencies
+        run: dotnet restore
+        working-directory: ./backend
+
+      - name: Build backend (Release)
+        run: dotnet build -c
