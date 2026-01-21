@@ -1,4 +1,3 @@
-
 name: CI on Pull Request
 
 on:
@@ -51,4 +50,3 @@ jobs:
       - name: Build backend in Release
         run: dotnet build -c Release --no-restore
         working-directory: ./backend
-
