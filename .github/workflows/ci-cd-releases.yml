@@ -110,7 +110,7 @@ jobs:
       uses: actions/download-artifact@v5
       with:
         name: frontend-build
-        path: ./frontend
+        path: frontend/dist
 
     - name: Login to Azure 
       uses: azure/login@v2
@@ -147,7 +147,7 @@ jobs:
       uses: actions/download-artifact@v5
       with:
         name: backend-build
-        path: ./backend
+        path: backend/dist
 
     - name: Login to Azure 
       uses: azure/login@v2
