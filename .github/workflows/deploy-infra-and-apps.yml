@@ -11,7 +11,6 @@ permissions:
 
 env: 
   AZURE_RG_NAME: rg-${{ vars.PROJECT_NAME }}-${{ vars.AZURE_RESOURCE_IDENTIFIER }}
-  ACTIONS_ALLOW_UNSECURE_COMMANDS: true
 
 jobs:
 
@@ -67,11 +66,7 @@ jobs:
 
 
     - name: Set version from tag
-      env:
-        TAG: ${{ github.ref_name }}
       run: |
-        echo "Tag: $TAG"
-
         echo " ${{ steps.extract_branch.outputs.branch }} "
         
         # remove leading v if present
