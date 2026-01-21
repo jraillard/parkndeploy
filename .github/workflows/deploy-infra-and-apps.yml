@@ -140,7 +140,7 @@ jobs:
     - name : Deploy artefact frontend
       uses : actions/download-artifact@v4
       with :
-        name : frontend-build
+        name : react-frontend-build
         path: ./frontend
 
         
