@@ -112,7 +112,7 @@ jobs:
       with :
         name : dotnet-backend-build
         path: ./backend
-      working-directory: ./backend # Specify where to find the solution file in repository
+        working-directory: ./backend # Specify where to find the solution file in repository
 
     - name: Login to Azure 
       uses: azure/login@v2
