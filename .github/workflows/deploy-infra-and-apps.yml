@@ -6,7 +6,7 @@ name: "cd_pipeline"
 on:
   workflow_run:
     workflows: ["ci_pipeline"] 
-    types: [completed]
+    types: completed
 
 
 # Variables globales pour le workflow
