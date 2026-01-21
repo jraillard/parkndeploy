@@ -7,7 +7,6 @@ permissions:
   # Require write permission to Fetch an OIDC token (required for federated credential) and write it
   # It will be automatically used on actions / cli that needs it
   id-token: write
-  contents: write
 
 env: 
   AZURE_RG_NAME: rg-${{ vars.PROJECT_NAME }}-${{ vars.AZURE_RESOURCE_IDENTIFIER }}
@@ -63,11 +62,13 @@ jobs:
         fetch-depth: 0
 
     - name: Extract branch name
-      run: echo "branch=$(git branch -r --contains ${{ github.ref }} --format '%(refname:lstrip=3)')" >> $GITHUB_OUTPUT
+      run: |
+        echo "$(git branch -r --contains ${{ github.ref }} --format '%(refname:lstrip=3)')"
+        echo "branch=$(git branch -r --contains ${{ github.ref }} --format '%(refname:lstrip=3)')" >> $GITHUB_OUTPUT
       id: extract_branch
 
     - name: Update app version
-      run: jq '.version = "${{ env.APP_VERSION }}"' package.json > tmp.json && mv tmp.json package.json
+      run: jq '.version = "${{ github.ref_name }}"' package.json > tmp.json && mv tmp.json package.json
       working-directory: ./frontend
       
     - name: Set up Git user
@@ -78,7 +79,7 @@ jobs:
     - name: Commit and push version change
       run: |
         git add ./frontend/package.json &&
-        git commit -m "update version ${{ env.APP_VERSION }}" &&
+        git commit -m "update version ${{ github.ref_name }}" &&
         git push origin HEAD:${{ steps.extract_branch.outputs.branch }}
 
 
