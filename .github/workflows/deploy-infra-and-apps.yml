@@ -153,11 +153,7 @@ jobs :
   build_frontend:
     runs-on: ubuntu-latest
     environment: production
-
-    steps:
-    runs-on: ubuntu-latest
-    environment: production
-
+    
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
