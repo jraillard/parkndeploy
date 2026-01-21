@@ -108,9 +108,10 @@ jobs:
         dotnet-version: '9.0.x'
         
     - name : Deploy artefact backend
-      uses : actions/download-artifact@v4
+      uses : actions/download-artifact@v5
       with :
         name : dotnet-backend-build
+        path : ./backend
         
 
 
@@ -125,7 +126,7 @@ jobs:
       uses: azure/webapps-deploy@v2
       with: 
         app-name: ${{ needs.deploy_infrastructure.outputs.appServiceName }} # Access to the previous job output to get the appServiceName deployed with bicep
-        package: ./backend/ParkNDeploy.Api/publish # Path to the previously published app
+        package: ./backend
   # deploy_infrastructure ...
 
   deploy_frontend:
@@ -138,9 +139,10 @@ jobs:
       uses: actions/checkout@v4
 
     - name : Deploy artefact frontend
-      uses : actions/download-artifact@v4
+      uses : actions/download-artifact@v5
       with :
         name : react-frontend-build
+        path : ./frontend
         
 
         
