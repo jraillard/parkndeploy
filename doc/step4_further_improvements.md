@@ -78,8 +78,18 @@ Every suggested improvements will be followed with clue(s) to achieve it.
 
 When you're done, compare your finds with this [article](https://jiminbyun.medium.com/github-actions-workflow-run-vs-workflow-call-3f1a5c6e19d4). :eyes:
 
-:star::star::star: Allow developer team to trigger the CD pipeline manually by specifying artifacts
-
-&rarr; You'll need to allow manual workflow trigger and retrieve the artifacts url using the GitHub API
+:star::star::star: Allow developer team to trigger the CD pipeline manually by specifying whether an artifact or a previous CI run_id.
 
 &rarr; Remember that workflow_dispatch will only works if youre workflows are on default branch or if you're using GitHub CLI to trigger it.
+
+## Next Level
+
+:star::star::star::star::star: Allow developper team to deploy whether on :
+- production environment (actual behavior)
+- dev environment
+
+If all workflow is trigger by a tag &rarr; it should match the following pattern : X.Y.Z-rc-XXXX (where X, Y, Z are all single digit)
+
+&rarr; Solution should keep all previous features
+
+&rarr; Don't forget secrets and azure things ... :eyes:
