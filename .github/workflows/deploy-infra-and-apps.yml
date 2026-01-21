@@ -3,11 +3,6 @@ on:
     tags:
       - '[0-9]+\.[0-9]+\.[0-9]+' 
 
-permissions:
-  # Require write permission to Fetch an OIDC token (required for federated credential) and write it
-  # It will be automatically used on actions / cli that needs it
-  id-token: write
-
 env: 
   AZURE_RG_NAME: rg-${{ vars.PROJECT_NAME }}-${{ vars.AZURE_RESOURCE_IDENTIFIER }}
   APP_VERSION: ${{ github.ref_name }}
@@ -100,6 +95,8 @@ jobs:
       - build_backend
       - build_frontend
     environment: production # bind the job to the production environment
+    permissions:
+      id-token: write
 
     outputs:
       appServiceName: ${{ steps.bicep_deploy.outputs.appServiceName }}
@@ -137,6 +134,8 @@ jobs:
     needs:
       - deploy_infrastructure
     environment: production
+    permissions:
+      id-token: write
 
     steps:
     - name: Checkout repository
@@ -166,6 +165,8 @@ jobs:
     needs: 
       - deploy_infrastructure
     environment: production
+    permissions:
+      id-token: write
 
     steps:
     - name: Download Frontend Artifact
