@@ -60,7 +60,7 @@ jobs:
 
   deploy_infrastructure:
     runs-on: ubuntu-latest
-    needs : build-dotnet-app-release-backend-job # Ensure this job runs after the pull_request job
+    needs : [build-dotnet-app-release-backend-job, build-reactapp-lint-frontend-job] # Ensure this job runs after the pull_request job
     environment: production # bind the job to the production environment
     outputs:
       appServiceName: ${{ steps.bicep_deploy.outputs.appServiceName }}
@@ -107,8 +107,11 @@ jobs:
       with:
         dotnet-version: '9.0.x'
         
-    - name: Publish the app
-      run: dotnet publish -c Release --property:PublishDir=publish # Publish the app to the API project publish folder
+    - name : Deploy artefact backend
+      uses : actions/download-artifact@v4
+      with :
+        name : dotnet-backend-build
+        path: ./backend
       working-directory: ./backend # Specify where to find the solution file in repository
 
     - name: Login to Azure 
@@ -134,10 +137,13 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Build the app
-      run: npm install && npm run build
-      working-directory: ./frontend    
+   - name : Deploy artefact frontend
+      uses : actions/download-artifact@v4
+      with :
+        name : frontend-build
+        path: ./frontend
 
+        
     - name: Login to Azure 
       uses: azure/login@v2
       with:
