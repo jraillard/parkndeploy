@@ -5,7 +5,6 @@ on:
   workflow_dispatch:
 
 
-
 permissions:
   # Require write permission to Fetch an OIDC token (required for federated credential) and write it
   # It will be automatically used on actions / cli that needs it
