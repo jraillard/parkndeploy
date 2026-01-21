@@ -71,6 +71,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Debug CI run id
+        run: echo "CI run id = ${{ github.event.workflow_run.id }}"
+
+      - name: List artifacts for CI run
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Listing artifacts for run ${{ github.event.workflow_run.id }}"
+          curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }}/artifacts" | sed -n '1,200p'
+
       - name: Download Backend Artifact
         uses: actions/download-artifact@v4
         with:
@@ -104,6 +114,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Debug CI run id
+        run: echo "CI run id = ${{ github.event.workflow_run.id }}"
+
+      - name: List artifacts for CI run
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Listing artifacts for run ${{ github.event.workflow_run.id }}"
+          curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }}/artifacts" | sed -n '1,200p'
 
       - name: Download Frontend Artifact
         uses: actions/download-artifact@v4
