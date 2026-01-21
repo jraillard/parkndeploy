@@ -1,7 +1,7 @@
 {
   "name": "frontend",
   "private": true,
-  "version": "v1.3.1",
+  "version": "v1.3.2",
   "type": "module",
   "scripts": {
     "dev": "vite --port 5175",
