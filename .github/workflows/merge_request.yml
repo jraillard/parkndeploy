@@ -1,0 +1,39 @@
+on: [pull_request]
+
+jobs:
+  frontend_test:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name : Run the linting script
+      run: npm run lint
+      working-directory: ./frontend
+
+    - name: Build the react app
+      run: npm install && npm run build
+      working-directory: ./frontend  
+
+  backend_test:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup .NET SDK 9.0.x
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+      
+    - name: Build the dotnet application in release mode
+      run: dotnet build --configuration Release
+      working-directory: ./backend
+      
+    - name: Publish the app
+      run: dotnet publish -c Release --property:PublishDir=publish
+      working-directory: ./backend
