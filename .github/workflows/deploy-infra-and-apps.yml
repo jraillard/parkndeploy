@@ -60,7 +60,7 @@ jobs:
 
   deploy_infrastructure:
     runs-on: ubuntu-latest
-    needs : build-dotnet-app-release-backend-job   # Ensure this job runs after the pull_request job
+    needs : [build-dotnet-app-release-backend-job, build-reactapp-lint-frontend-job]   # Ensure this job runs after the pull_request job
     environment: production # bind the job to the production environment
     outputs:
       appServiceName: ${{ steps.bicep_deploy.outputs.appServiceName }}
@@ -137,7 +137,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-   - name : Deploy artefact frontend
+    - name : Deploy artefact frontend
       uses : actions/download-artifact@v4
       with :
         name : frontend-build
