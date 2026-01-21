@@ -82,6 +82,9 @@ jobs:
         git commit -m "update version ${{ github.ref_name }}" &&
         git push origin HEAD:${{ steps.extract_branch.outputs.branch }}
 
+    outputs:
+      branch_name: ${{ steps.extract_branch.outputs.branch }}
+
 
   build_frontend:
     runs-on: ubuntu-latest
@@ -94,7 +97,7 @@ jobs:
         fetch-depth: 0
 
     - name: Pull latest changes
-      run: git pull
+      run: git checkout ${{ needs.commit_app_version.outputs.branch_name }} && git pull
 
     - name: Build the app
       run: npm install && npm run build
