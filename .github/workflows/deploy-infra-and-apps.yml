@@ -150,6 +150,9 @@ jobs:
   deploy_backend:
     runs-on: ubuntu-latest
     needs: [deploy_infrastructure]
+    permissions:
+      id-token: write
+      contents: read
     environment: production
     steps:
       - name: Checkout
@@ -179,6 +182,9 @@ jobs:
   # --------------------------
   deploy_frontend:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     needs: [deploy_infrastructure]
     environment: production
     steps:
