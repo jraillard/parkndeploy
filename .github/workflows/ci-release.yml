@@ -59,11 +59,12 @@ jobs:
         run: dotnet restore
         working-directory: ./backend
 
+      # Publier le backend (build Release) et créer le dossier publish
       - name: Publish backend
         run: dotnet publish ./NomDuProjet.csproj -c Release -o ./publish
         working-directory: ./backend
 
-      
+      # Upload l'artifact backend pour le CD
       - name: Upload backend artifact
         uses: actions/upload-artifact@v3
         with:
