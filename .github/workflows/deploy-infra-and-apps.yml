@@ -23,8 +23,6 @@ jobs:
   # --------------------------
   ci_frontend:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -35,7 +33,25 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '21.7.1'
+          
+      - name: Install & Build Frontend
+        run: npm install && npm run build
+        env:
+          VITE_APP_VERSION: ${{ github.ref_name }}
+        working-directory: ./frontend
 
+      - name: Upload Frontend Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: ./frontend/dist
+
+  package_version:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    needs: [ci_frontend]
+    steps:
       # 1. On change la version dans le fichier package.json localement
       - name: Update package.json version
         working-directory: ./frontend
@@ -50,18 +66,6 @@ jobs:
           # Le [skip ci] est crucial pour ne pas relancer le pipeline en boucle !
           git commit -m "chore: bump version to ${{ github.ref_name }} [skip ci]"
           git push origin HEAD:main
-
-      - name: Install & Build Frontend
-        run: npm install && npm run build
-        env:
-          VITE_APP_VERSION: ${{ github.ref_name }}
-        working-directory: ./frontend
-
-      - name: Upload Frontend Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: frontend-dist
-          path: ./frontend/dist
 
   # --------------------------
   # CI Backend : publish & artifact
@@ -92,7 +96,7 @@ jobs:
   # --------------------------
   deploy_infrastructure:
     runs-on: ubuntu-latest
-    needs: [ci_frontend, ci_backend]
+    needs: [ci_frontend, ci_backend, package_version]
     environment: production
 
     outputs:
@@ -131,7 +135,7 @@ jobs:
   # --------------------------
   deploy_backend:
     runs-on: ubuntu-latest
-    needs: [deploy_infrastructure, ci_backend]
+    needs: [deploy_infrastructure]
     environment: production
     steps:
       - name: Checkout
@@ -161,7 +165,7 @@ jobs:
   # --------------------------
   deploy_frontend:
     runs-on: ubuntu-latest
-    needs: [deploy_infrastructure, ci_frontend]
+    needs: [deploy_infrastructure]
     environment: production
     steps:
       - name: Checkout
