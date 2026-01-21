@@ -32,7 +32,7 @@ function App() {
       {isError && <span>Something went wrong with the backend ...</span>}
       {data && <ParkingList parkings={data.parkings} />}
 
-      <p> {APP.VERSION}</p>
+      <p> App version  : {APP_VERSION}</p>
     </div>
   );
 }
