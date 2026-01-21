@@ -9,13 +9,13 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
       
-    - name : Run the linting script
-      run: npm run lint
-      working-directory: ./frontend
-
     - name: Build the react app
       run: npm install && npm run build
       working-directory: ./frontend  
+
+    - name : Run the linting script
+      run: npm run lint
+      working-directory: ./frontend
 
   backend_test:
     runs-on: ubuntu-latest
