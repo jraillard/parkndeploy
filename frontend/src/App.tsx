@@ -24,7 +24,7 @@ function App() {
         Where can I Park in Angers ? 👀
       </h1>
       <h2 className="text-center">
-        v1.0.0
+        {APP_VERSION}
       </h2>
       <ParkingListFilters
         onChange={(parkingName: string) => {
