@@ -60,7 +60,9 @@ jobs:
 
     - name: Extract branch name
       shell: bash
-      run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+      run: |
+        branch=$(git branch -r --contains ${{ github.ref }} --format "%(refname:lstrip=3)")
+        echo ::set-env name=BRANCH::$branch
       id: extract_branch
 
     - name: Set version from tag
