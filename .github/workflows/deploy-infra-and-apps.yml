@@ -14,14 +14,47 @@ permissions:
   id-token: write
 
 
-    
-    
+
 env: 
   AZURE_RG_NAME: rg-${{ vars.PROJECT_NAME }}-${{ vars.AZURE_RESOURCE_IDENTIFIER }}
   
 jobs:
+  build-reactapp-lint-frontend-job:
+      runs-on: ubuntu-latest
+      environment: production
+
+      steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build the react app - production mode
+        run: npm install && npm run build
+        working-directory: ./frontend
+
+      - name: Run the linting script
+        run: npm run lint
+        working-directory: ./frontend
+
+  build-dotnet-app-release-backend-job:
+      runs-on: ubuntu-latest
+      environment: production
+
+      steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK 9.0.x
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Build the dotnet app in release mode
+        run: dotnet build --configuration Release
+        working-directory: ./backend
+
   deploy_infrastructure:
     runs-on: ubuntu-latest
+    needs : build-dotnet-app-release-backend-job # Ensure this job runs after the pull_request job
     environment: production # bind the job to the production environment
     outputs:
       appServiceName: ${{ steps.bicep_deploy.outputs.appServiceName }}
@@ -123,3 +156,6 @@ jobs:
         action: upload
         skip_app_build: true
         skip_api_build: true
+
+
+  deploy_infrastructure
