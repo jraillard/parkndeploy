@@ -1,35 +1,35 @@
-on: [pull_request, workflow_dispatch]
+# on: [pull_request, workflow_dispatch]
   
-jobs:
-    build-reactapp-lint-frontend-job:
-        runs-on: ubuntu-latest
-        environment: production
+# jobs:
+#     build-reactapp-lint-frontend-job:
+#         runs-on: ubuntu-latest
+#         environment: production
 
-        steps:
-        - name: Checkout repository
-          uses: actions/checkout@v4
+#         steps:
+#         - name: Checkout repository
+#           uses: actions/checkout@v4
 
-        - name: Build the react app - production mode
-          run: npm install && npm run build
-          working-directory: ./frontend
+#         - name: Build the react app - production mode
+#           run: npm install && npm run build
+#           working-directory: ./frontend
 
-        - name: Run the linting script
-          run: npm run lint
-          working-directory: ./frontend
+#         - name: Run the linting script
+#           run: npm run lint
+#           working-directory: ./frontend
 
-    build-dotnet-app-release-backend-job:
-        runs-on: ubuntu-latest
-        environment: production
+#     build-dotnet-app-release-backend-job:
+#         runs-on: ubuntu-latest
+#         environment: production
 
-        steps:
-        - name: Checkout repository
-          uses: actions/checkout@v4
+#         steps:
+#         - name: Checkout repository
+#           uses: actions/checkout@v4
 
-        - name: Setup .NET SDK 9.0.x
-          uses: actions/setup-dotnet@v4
-          with:
-            dotnet-version: '9.0.x'
+#         - name: Setup .NET SDK 9.0.x
+#           uses: actions/setup-dotnet@v4
+#           with:
+#             dotnet-version: '9.0.x'
 
-        - name: Build the dotnet app in release mode
-          run: dotnet build --configuration Release
-          working-directory: ./backend
+#         - name: Build the dotnet app in release mode and publish
+#           run: dotnet build --configuration Release --property:PublishDir=publish
+#           working-directory: ./backend
