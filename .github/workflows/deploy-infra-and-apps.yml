@@ -3,9 +3,6 @@ on:
     tags:
       - 'v[0-9].[0-9].[0-9]'
   workflow_dispatch:
-# on
-# ...
-
 
 
 permissions:
@@ -14,14 +11,56 @@ permissions:
   id-token: write
 
 
-    
-    
+
 env: 
   AZURE_RG_NAME: rg-${{ vars.PROJECT_NAME }}-${{ vars.AZURE_RESOURCE_IDENTIFIER }}
   
 jobs:
+  build-reactapp-lint-frontend-job:
+      runs-on: ubuntu-latest
+      environment: production
+
+      steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build the react app - production mode
+        run: npm install && npm run build
+        working-directory: ./frontend
+
+      - name: 'Createa artefact frontend'
+        uses: actions/upload-artifact@v4
+        with:
+          name: react-frontend-build
+          path : ./frontend
+
+  build-dotnet-app-release-backend-job:
+      runs-on: ubuntu-latest
+      environment: production
+
+      steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK 9.0.x
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Build the dotnet app in release mode
+        run: dotnet build --configuration Release
+        working-directory: ./backend
+
+
+      - name: 'Create artefact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: dotnet-backend-build
+          path : ./backend
+
   deploy_infrastructure:
     runs-on: ubuntu-latest
+    needs : [build-dotnet-app-release-backend-job, build-reactapp-lint-frontend-job]   # Ensure this job runs after the pull_request job
     environment: production # bind the job to the production environment
     outputs:
       appServiceName: ${{ steps.bicep_deploy.outputs.appServiceName }}
@@ -52,6 +91,8 @@ jobs:
         template: ./infrastructure/main.bicep
         parameters: project=${{ vars.PROJECT_NAME }} location=${{ secrets.AZURE_REGION }} swaLocation=${{ secrets.AZURE_SWA_REGION }} identifier=${{ vars.AZURE_RESOURCE_IDENTIFIER }}
         resourceGroupName: ${{ env.AZURE_RG_NAME }}
+
+
   deploy_backend:
     runs-on: ubuntu-latest
     needs: deploy_infrastructure
@@ -66,9 +107,13 @@ jobs:
       with:
         dotnet-version: '9.0.x'
         
-    - name: Publish the app
-      run: dotnet publish -c Release --property:PublishDir=publish # Publish the app to the API project publish folder
-      working-directory: ./backend # Specify where to find the solution file in repository
+    - name : Deploy artefact backend
+      uses : actions/download-artifact@v5
+      with :
+        name : dotnet-backend-build
+        path : ./backend
+        
+
 
     - name: Login to Azure 
       uses: azure/login@v2
@@ -81,7 +126,7 @@ jobs:
       uses: azure/webapps-deploy@v2
       with: 
         app-name: ${{ needs.deploy_infrastructure.outputs.appServiceName }} # Access to the previous job output to get the appServiceName deployed with bicep
-        package: ./backend/ParkNDeploy.Api/publish # Path to the previously published app
+        package: ./backend
   # deploy_infrastructure ...
 
   deploy_frontend:
@@ -93,10 +138,14 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Build the app
-      run: npm install && npm run build
-      working-directory: ./frontend    
+    - name : Deploy artefact frontend
+      uses : actions/download-artifact@v5
+      with :
+        name : react-frontend-build
+        path : ./frontend
+        
 
+        
     - name: Login to Azure 
       uses: azure/login@v2
       with:
@@ -119,7 +168,8 @@ jobs:
       uses: azure/static-web-apps-deploy@v1
       with:
         azure_static_web_apps_api_token: ${{ env.SWA_DEPLOYMENT_TOKEN }}
-        app_location: frontend/dist
+        app_location: ./frontend
         action: upload
         skip_app_build: true
         skip_api_build: true
+
