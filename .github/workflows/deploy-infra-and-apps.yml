@@ -62,13 +62,27 @@ jobs:
         fetch-depth: 0
 
     - name: Extract branch name
-      run: echo "branch=$(git branch -r --contains ${{ github.ref }} --format '%(refname:lstrip=3)')" >> $GITHUB_OUTPUT
       id: extract_branch
+      run: |
+        # Ensure we have all remote branches available locally
+        git fetch --prune origin '+refs/heads/*:refs/remotes/origin/*' || true
+
+        # Resolve commit SHA for the current ref (tag)
+        SHA=$(git rev-parse "${GITHUB_REF}")
+        echo "Commit: $SHA"
+
+        # Prefer an origin/* branch that contains the commit, strip the origin/ prefix
+        BRANCH=$(git branch -r --contains "$SHA" --format='%(refname:lstrip=3)' | grep -E '^origin/' | sed 's#^origin/##' | head -n1 || true)
+
+        # Fallback: take any remote branch that contains the commit (remove remote prefix)
+        if [ -z "$BRANCH" ]; then
+          BRANCH=$(git branch -r --contains "$SHA" --format='%(refname:lstrip=3)' | sed 's#^.*/##' | head -n1 || true)
+        fi
+
+        echo "branch=$BRANCH" >> $GITHUB_OUTPUT
 
 
     - name: Set version from tag
-      env:
-        TAG: ${{ github.ref_name }}
       run: |
         echo "Tag: $TAG"
 
@@ -205,4 +219,3 @@ jobs:
         package: ./backend/ParkNDeploy.Api/publish # Path to the previously published app
 
 
-  
