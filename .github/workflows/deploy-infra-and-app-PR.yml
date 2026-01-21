@@ -36,8 +36,5 @@ jobs:
           run: dotnet build --configuration Release
           working-directory: ./backend
 
-    deploy_infrastructure:
-      runs-on: ubuntu-latest
-      needs : build-dotnet-app-release-backend-job # Ensure this job runs after the pull_request job
-      environment: production
+   
 
