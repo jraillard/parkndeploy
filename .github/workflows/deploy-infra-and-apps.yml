@@ -80,7 +80,8 @@ jobs:
       run: |
         git add ./frontend/package.json &&
         git commit -m "update version ${{ github.ref_name }}" &&
-        echo "git push origin HEAD:${{ steps.extract_branch.outputs.branch }}"
+        git push origin HEAD:${{ steps.extract_branch.outputs.branch }} &&
+        git fetch origin
 
 
   build_frontend:
