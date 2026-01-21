@@ -2,10 +2,12 @@
 # Pipeline CI + CD unique
 # Déclenche uniquement sur push d'un tag vMAJOR.MINOR.PATCH
 # --------------------------
+name: cd_pipeline
 on:
-  push:
-    tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
+  workflow_run:
+    workflows: ["ci_pipeline"]
+    types:
+      - completed
 
 # Permissions pour OIDC + lecture du repo
 permissions:
@@ -17,96 +19,11 @@ env:
   AZURE_RG_NAME: rg-${{ vars.PROJECT_NAME }}-${{ vars.AZURE_RESOURCE_IDENTIFIER }}
 
 jobs:
-
-  # --------------------------
-  # CI Frontend : build & artifact
-  # --------------------------
-  ci_frontend:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '21.7.1'
-          
-      - name: Install & Build Frontend
-        run: npm install && npm run build
-        env:
-          VITE_APP_VERSION: ${{ github.ref_name }}
-        working-directory: ./frontend
-
-      - name: Upload Frontend Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: frontend-dist
-          path: ./frontend/dist
-
-  package_version:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    needs: [ci_frontend]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '21.7.1'
-          
-      # 1. On change la version dans le fichier package.json localement
-      - name: Update package.json version
-        working-directory: ./frontend
-        run: npm version ${{ github.ref_name }} --no-git-tag-version
-
-      # 2. On sauvegarde ce changement sur le dépôt GitHub
-      - name: Commit and Push version update
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add frontend/package.json
-          # Le [skip ci] est crucial pour ne pas relancer le pipeline en boucle !
-          git commit -m "chore: bump version to ${{ github.ref_name }} [skip ci]"
-          git push origin HEAD:main
-
-  # --------------------------
-  # CI Backend : publish & artifact
-  # --------------------------
-  ci_backend:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v4 
-        with:
-          dotnet-version: '9.0.x'
-
-      - name: Publish Backend
-        run: dotnet publish -c Release -o ./myapp
-        working-directory: ./backend
-
-      - name: Upload Backend Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: backend-publish
-          path: ./backend/myapp
-
   # --------------------------
   # CD : Déployer l'infrastructure
   # --------------------------
   deploy_infrastructure:
     runs-on: ubuntu-latest
-    needs: [ci_frontend, ci_backend, package_version]
     environment: production
 
     outputs:
