@@ -61,7 +61,7 @@ jobs:
 
       # Publier le backend (build Release) et créer le dossier publish
       - name: Publish backend
-        run: dotnet publish ./NomDuProjet.csproj -c Release -o ./publish
+        run: dotnet publish ./parkndeployDoumi.csproj -c Release -o ./publish
         working-directory: ./backend
 
       # Upload l'artifact backend pour le CD
