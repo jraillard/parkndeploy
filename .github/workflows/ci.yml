@@ -39,6 +39,7 @@ jobs:
         with:
           name: frontend-dist
           path: ./frontend/dist
+          retention-days: 1
 
   package_version:
     runs-on: ubuntu-latest
@@ -96,3 +97,4 @@ jobs:
         with:
           name: backend-publish
           path: ./backend/myapp
+          retention-days: 1
